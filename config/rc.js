@@ -7,7 +7,8 @@ exports.rc = {
     },
     intervals: {
       fetch: 3000,
-      populate: 1000
+      populate: 1000,
+      dispatch: 5000,
     }
   }
 };

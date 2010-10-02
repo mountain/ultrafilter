@@ -22,23 +22,32 @@
          <p>by <a href="http://github.com/mountain/ultrafilter">Ultrafilter</a></p>
        </div>
 
-       <div class="span-14 colborder">
-       <h3 id="title" class="span-12">最近更新</h3>
-       <ul id="changes" class="span-14">
+       <div class="span-6 colborder">
+       <h3 id="title" class="span-6">最近更新</h3>
+       <ul id="changes" class="span-6">
        <% for(var ind in changes) { var change = changes[ind]; %>
          <li><%= change.rc_timestamp.toString().split(' ')[4] %>&nbsp;&nbsp;<a href="/r/<%= lang %>/<%= change.rc_page_id.toString(36) %>"><%= change.rc_title %></a></li>
        <% } %>
        </ul>
-       <span id="pages" class="span-12">
+       <span id="pages" class="span-6">
        <% for(var i=1;i<=pagenum;i++) { %>
          <a href="/rc/<%= lang %>/<%= escape(encode(category)) %>/<%= i %>"><%= i %></a>&nbsp;&nbsp;
        <% } %>
        </span>
        </div>
 
-       <div class="span-5 last">
-       <h3 id="title" class="span-5">子分类</h3>
-       <ul id="subcategories" class="span-5">
+       <div class="span-6 colborder">
+       <h3 id="talks" class="span-6">最近讨论</h3>
+       <ul id="talks" class="span-6">
+       <% for(var ind in talks) { var talk = talks[ind]; %>
+         <li><%= talk.rc_timestamp.toString().split(' ')[4] %>&nbsp;&nbsp;<a href="/r/<%= lang %>/<%= talk.rc_page_id.toString(36) %>"><%= talk.rc_title %></a></li>
+       <% } %>
+       </ul>
+       </div>
+
+       <div class="span-4 last">
+       <h3 id="title" class="span-4">子分类</h3>
+       <ul id="subcategories" class="span-4">
        <% for(var ind in subcategories) { var sub = subcategories[ind]; %>
          <% if(sub) { %><li><a href="/rc/<%= lang %>/<%= sub.cat_title %>"><%= sub.cat_title %></a></li><% } %>
        <% } %>

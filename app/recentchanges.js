@@ -123,13 +123,20 @@ exports.app = function(env) {
       result = rcConn.querySync("select count(*) as total from filteredchanges where fc_cat_id = " + catId);
       var total = result.fetchAllSync()[0].total, pagenum = total/perpage;
       if(page>=pagenum) page = pagenum - 1;
-      result.freeSync();
-      result = rcConn.querySync("select rc.rc_title, rc.rc_page_id, rc.rc_timestamp from filteredchanges as fc, recentchanges as rc where fc.fc_rc_id = rc.rc_id and fc.fc_cat_id = " + catId + " order by rc.rc_timestamp desc limit " + perpage + " offset " + perpage*page);
-      var rows = [];
-      if(result) rows = result.fetchAllSync();
-      var html = fc({lang: lang, msg: msg, category: name, subcategories:subcategories, changes:rows, pagenum:pagenum, encode:encode});
-      res.simpleHtml(200, html);
       if(result) result.freeSync();
+
+      result = rcConn.querySync("select rc.rc_title, rc.rc_page_id, rc.rc_timestamp from filteredchanges as fc, recentchanges as rc where fc.fc_rc_id = rc.rc_id and rc.rc_ns = 0 and fc.fc_cat_id = " + catId + " order by rc.rc_timestamp desc limit " + perpage + " offset " + perpage*page);
+      var changes = [];
+      if(result) changes = result.fetchAllSync();
+      if(result) result.freeSync();
+
+      result = rcConn.querySync("select rc.rc_title, rc.rc_page_id, rc.rc_timestamp from filteredchanges as fc, recentchanges as rc where fc.fc_rc_id = rc.rc_id and rc.rc_ns = 1 and fc.fc_cat_id = " + catId + " order by rc.rc_timestamp desc limit " + perpage);
+      var talks = [];
+      if(result) talks = result.fetchAllSync();
+      if(result) result.freeSync();
+
+      var html = fc({lang: lang, msg: msg, category: name, subcategories:subcategories, changes:changes, pagenum:pagenum, talks: talks, encode:encode});
+      res.simpleHtml(200, html);
     }
     return;
   };

@@ -30,7 +30,7 @@ function insertFc(env, rcId, pageId) {
 }
 
 function insertNotification(env, rcId, user, talkTitle) {
-  env.rcConn.querySync("insert into notification(ntf_user, ntf_talk_title, ntf_rc_id)" +
+  env.rcConn.querySync("insert into notifications(ntf_user, ntf_talk_title, ntf_rc_id)" +
        " values('" + user + "','" + talkTitle + "'," + rcId + ")");
 }
 

@@ -2,50 +2,25 @@ require('../../lib/underscore');
 
 var sys = require('sys');
 
-var sqlclient = require("../libmysqlclient/mysql-libmysqlclient");
+var utf8 = require('../lib/utf8');
+var sql = require("./sql");
 
 var cacheSize = 10000;
-cache = new (require('../../lib/cache').Cache)(cacheSize);
+var cache = new (require('../../lib/cache').Cache)(cacheSize);
+var env = {
+  rc: require('../../config/rc').rc
+};
 
 function log() {
     sys.print((new Date()).toUTCString() + " - ");
     sys.puts(_.toArray(arguments).join(" "));
 }
 
-function createConn(host, user, pwd, db, port) {
-    var conn = sqlclient.createConnectionSync(host, user, pwd, db, port);
-    conn.querySync("SET character_set_client = utf8");
-    conn.querySync("SET character_set_results = utf8");
-    conn.querySync("SET character_set_connection = utf8");
-    return conn;
-}
-
-function encode(string) {
-  string = string.replace(/\r\n/g,"\n");
-  var utftext = "";
-  for (var n = 0; n < string.length; n++) {
-    var c = string.charCodeAt(n);
-    if (c < 128) {
-      utftext += String.fromCharCode(c);
-    }
-    else if((c > 127) && (c < 2048)) {
-      utftext += String.fromCharCode((c >> 6) | 192);
-      utftext += String.fromCharCode((c & 63) | 128);
-    }
-    else {
-      utftext += String.fromCharCode((c >> 12) | 224);
-      utftext += String.fromCharCode(((c >> 6) & 63) | 128);
-      utftext += String.fromCharCode((c & 63) | 128);
-    }
-  }
-  return utftext;
-}
-
-function get(wiki_conn, catId) {
+function get(wikiConn, catId) {
   var cats = cache['c' + catId];
   if(!cats) {
     cats = [];
-    result = wiki_conn.querySync("select distinct(cat_to) from catgraph where cat_from = " + catId);
+    result = wikiConn.querySync("select distinct(cat_to) from catgraph where cat_from = " + catId);
     rows = result.fetchAllSync();
     _.each(rows, function(row) {
       var cat_to = row.cat_to;
@@ -59,10 +34,10 @@ function get(wiki_conn, catId) {
   return cats;
 }
 
-function categories(wiki_conn, pageId) {
+function categories(wikiConn, pageId) {
   var cats = [], mark = 0;
 
-  var result = wiki_conn.querySync("select distinct(cat_to) from catgraph where page_from = " + pageId);
+  var result = wikiConn.querySync("select distinct(cat_to) from catgraph where page_from = " + pageId);
   var rows = result.fetchAllSync();
   _.each(rows, function(row) {
       cats.push(row.cat_to)
@@ -71,7 +46,7 @@ function categories(wiki_conn, pageId) {
 
   var len = cats.length;
   for(var i=0;i<len;i++) {
-    parents = get(wiki_conn, cats[i]);
+    parents = get(wikiConn, cats[i]);
     _.each(parents, function(parent) {
       if(_.indexOf(cats, parent) === -1) {
         cats.push(parent);
@@ -81,7 +56,7 @@ function categories(wiki_conn, pageId) {
 
   var len2 = cats.length;
   for(var i=len;i<len2;i++) {
-    parents = get(wiki_conn, cats[i]);
+    parents = get(wikiConn, cats[i]);
     _.each(parents, function(parent) {
       if(_.indexOf(cats, parent) === -1) {
         cats.push(parent);
@@ -91,7 +66,7 @@ function categories(wiki_conn, pageId) {
 
   var len3 = cats.length;
   for(var i=len2;i<len3;i++) {
-    parents = get(wiki_conn, cats[i]);
+    parents = get(wikiConn, cats[i]);
     _.each(parents, function(parent) {
       if(_.indexOf(cats, parent) === -1) {
         cats.push(parent);
@@ -102,16 +77,21 @@ function categories(wiki_conn, pageId) {
   return cats;
 }
 
-function insertFc(rc_conn, wiki_conn, rcId, pageId) {
-  var result = rc_conn.querySync("select fc_rc_id from filteredchanges where fc_rc_id = " + rcId);
+function insertFc(rcConn, wikiConn, rcId, pageId) {
+  var result = rcConn.querySync("select fc_rc_id from filteredchanges where fc_rc_id = " + rcId);
   var rows = result.fetchAllSync();
   if(rows.length === 0) {
-    _.each(categories(wiki_conn, pageId), function(cat_id) {
-      rc_conn.querySync("insert into filteredchanges(fc_rc_id, fc_cat_id)" +
+    _.each(categories(wikiConn, pageId), function(cat_id) {
+      rcConn.querySync("insert into filteredchanges(fc_rc_id, fc_cat_id)" +
            " values(" + rcId + "," + cat_id + ")"
       );
     });
   }
+}
+
+function insertNotification(rcConn, rcId, user, talkTitle) {
+  rcConn.querySync("insert into notification(ntf_user, ntf_talk_title, ntf_rc_id)" +
+       " values('" + user + "','" + talkTitle + "'," + rcId + ")");
 }
 
 function getArticle(lang, talkTitle, callback) {
@@ -121,7 +101,52 @@ function getArticle(lang, talkTitle, callback) {
   var http = require('http'),
       wp = http.createClient(80, host),
       request = wp.request('GET',
-        '/w/api.php?action=query&prop=info&inprop=subjectid&format=json&callback=?&titles=' + encode(talkTitle),
+        '/w/api.php?action=query&prop=info&inprop=subjectid&format=json&callback=?&titles=' + utf8.encode(talkTitle),
+        {
+          'host': host,
+          'User-Agent': 'Ultrafilter'
+        }
+      );
+  request.end();
+  log("check talk: " + lang + ":" + talkTitle);
+
+  var subjectid, body = "";
+  request.on('response', function (response) {
+    response.setEncoding('utf-8');
+    response.on('data', function (chunk) {
+      body = body + chunk;
+    });
+    response.on('end', function () {
+      try {
+        body = body.substring(1, body.length - 1);
+        log(body);
+        var data = JSON.parse(body);
+        for(var pageId in data.query.pages) {
+          if(pageId > 0) {
+            var page = data.query.pages[pageId];
+            subjectid = page.subjectid;
+            log("subjectId(" + subjectid + ") for talk: " + lang + ":" + talkTitle);
+            callback(subjectid);
+            break;
+          }
+        }
+        body = "";
+      } catch (e) {
+        body = "";
+        log('error when parsing json: ' + e);
+      }
+    });
+  });
+}
+
+function notifyParticipant(lang, talkTitle, callback) {
+  var lang = lang || 'zh',
+      host = lang + '.wikipedia.org';
+
+  var http = require('http'),
+      wp = http.createClient(80, host),
+      request = wp.request('GET',
+        '/w/api.php?action=query&prop=revisions&rvprop=user&format=json&callback=?&titles=' + utf8.encode(talkTitle),
         {
           'host': host,
           'User-Agent': 'Ultrafilter'
@@ -143,9 +168,9 @@ function getArticle(lang, talkTitle, callback) {
         for(var pageId in data.query.pages) {
           if(pageId > 0) {
             var page = data.query.pages[pageId];
-            subjectid = page.subjectid;
-            log("subjectId(" + subjectid + ") for talk: " + lang + ":" + talkTitle);
-            callback(subjectid);
+            revisions = page.revisions;
+            log("revisions for talk: " + lang + ":" + talkTitle);
+            callback(revisions);
             break;
           }
         }
@@ -158,37 +183,39 @@ function getArticle(lang, talkTitle, callback) {
   });
 }
 
-function dispatchTalk(lang, rc_conn, wiki_conn) {
-  var result = rc_conn.querySync("select rc_id, rc_title from recentchanges where rc_ns=1 and rc_handled=0 limit 1");
+function dispatchTalk(lang, rcConn, wikiConn) {
+  var result = rcConn.querySync("select rc_id, rc_title from recentchanges where rc_ns=1 and rc_handled=0 limit 1");
   var rows = result.fetchAllSync();
-  var rcId, talkTitle, pageId;
+  var rcId, talkTitle;
   if(rows.length > 0) {
     rcId = rows[0].rc_id;
     talkTitle = rows[0].rc_title;
 
-    pageId = getArticle(lang, talkTitle, function(pageId) {
-      insertFc(rc_conn, wiki_conn, rcId, pageId);
-      result = rc_conn.querySync("update recentchanges set rc_handled = 1 where rc_id =" + rcId);
+    getArticle(lang, talkTitle, function(pageId) {
+      insertFc(rcConn, wikiConn, rcId, pageId);
+      result = rcConn.querySync("update recentchanges set rc_handled = 1 where rc_id =" + rcId);
       log("rc(" + rcId + ") had been handled.");
+    });
+
+    notifyParticipant(lang, talkTitle, function(participants) {
+      _.each(participants, function(participant) {
+        insertNotification(rcConn, rcId, participant.user, talkTitle);
+      });
     });
   }
 }
-
-var env = {
-  rc: require('../../config/rc').rc
-};
 
 exports.start = function(settings, lang) {
   _.extend(env, settings);
   if(_.indexOf(env.rc.supported, lang) == -1) throw 'unsuported lang: ' + lang;
 
   log("setup wikidb connections for " + lang);
-  var wiki_conn = createConn(env['db-host'], env['db-user'], env['db-pwd'], env.rc[lang].db.wiki);
+  var wikiConn = sql.connect(env['db-host'], env['db-user'], env['db-pwd'], env.rc[lang].db.wiki);
   log("setup rcdb connections for " + lang);
-  var rc_conn = createConn(env['db-host'], env['db-user'], env['db-pwd'], env.rc[lang].db.rc);
+  var rcConn = sql.connect(env['db-host'], env['db-user'], env['db-pwd'], env.rc[lang].db.rc);
 
   var dispatch = function() {
-    dispatchTalk(lang, rc_conn, wiki_conn);
+    dispatchTalk(lang, rcConn, wikiConn);
   };
   setInterval(dispatch, env.rc[lang].intervals.dispatch);
 }

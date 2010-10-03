@@ -2,7 +2,7 @@ require('../../lib/underscore');
 
 var sys = require('sys');
 
-var utf8 = require('../lib/utf8');
+var utf8 = require('../../lib/utf8');
 var sql = require("./sql");
 
 var cacheSize = 10000;
@@ -197,11 +197,11 @@ function dispatchTalk(lang, rcConn, wikiConn) {
       log("rc(" + rcId + ") had been handled.");
     });
 
-    notifyParticipant(lang, talkTitle, function(participants) {
-      _.each(participants, function(participant) {
-        insertNotification(rcConn, rcId, participant.user, talkTitle);
-      });
-    });
+    //notifyParticipant(lang, talkTitle, function(participants) {
+    //  _.each(participants, function(participant) {
+    //    insertNotification(rcConn, rcId, participant.user, talkTitle);
+    //  });
+    //});
   }
 }
 

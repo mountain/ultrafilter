@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 var fs = require('fs'),
-populate = require('../vendors/minimal/populate-cat'),
+populate = require('../vendors/ultrafilter/populate-cat'),
 sys = require('sys');
 
 var arg = process.argv[1],

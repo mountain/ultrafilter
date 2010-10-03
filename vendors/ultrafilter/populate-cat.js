@@ -2,7 +2,7 @@ require('../../lib/underscore');
 
 var sys = require('sys');
 
-var utf8 = require('../lib/utf8');
+var utf8 = require('../../lib/utf8');
 var sql = require("./sql");
 
 var cacheSize = 10000;

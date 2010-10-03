@@ -2,6 +2,7 @@ require('../lib/underscore');
 
 var sys = require('sys');
 
+var utf8 = require('../lib/utf8');
 var sqlclient = require("../vendors/libmysqlclient/mysql-libmysqlclient");
 
 var wikiConns = {};
@@ -27,52 +28,6 @@ function setupConns(env, lang) {
   rcConns[lang] = createConn(env['db-host'], env['db-user'], env['db-pwd'], env.rc[lang].db.rc);
 }
 
-function encode(string) {
-  string = string.replace(/\r\n/g,"\n");
-  var utftext = "";
-  for (var n = 0; n < string.length; n++) {
-    var c = string.charCodeAt(n);
-    if (c < 128) {
-      utftext += String.fromCharCode(c);
-    }
-    else if((c > 127) && (c < 2048)) {
-      utftext += String.fromCharCode((c >> 6) | 192);
-      utftext += String.fromCharCode((c & 63) | 128);
-    }
-    else {
-      utftext += String.fromCharCode((c >> 12) | 224);
-      utftext += String.fromCharCode(((c >> 6) & 63) | 128);
-      utftext += String.fromCharCode((c & 63) | 128);
-    }
-  }
-  return utftext;
-}
-
-function decode(utftext) {
-    var string = "";
-    var i = 0;
-    var c = c1 = c2 = 0;
-    while ( i < utftext.length ) {
-      c = utftext.charCodeAt(i);
-      if (c < 128) {
-        string += String.fromCharCode(c);
-        i++;
-      }
-      else if((c > 191) && (c < 224)) {
-        c2 = utftext.charCodeAt(i+1);
-        string += String.fromCharCode(((c & 31) << 6) | (c2 & 63));
-        i += 2;
-      }
-      else {
-        c2 = utftext.charCodeAt(i+1);
-        c3 = utftext.charCodeAt(i+2);
-        string += String.fromCharCode(((c & 15) << 12) | ((c2 & 63) << 6) | (c3 & 63));
-        i += 3;
-      }
-    }
-    return string;
-}
-
 exports.app = function(env) {
 
   var msg = env.i18n.msg;
@@ -83,7 +38,7 @@ exports.app = function(env) {
 
   var perpage = 50;
   return function(req, res, lang, name, noop, page) {
-    name = decode(unescape(name));
+    name = utf8.decode(unescape(name));
     if(page) {
       page = page.toString();
       page = parseInt(page.substring(1, page.length));
@@ -135,7 +90,7 @@ exports.app = function(env) {
       if(result) talks = result.fetchAllSync();
       if(result) result.freeSync();
 
-      var html = fc({lang: lang, msg: msg, category: name, subcategories:subcategories, changes:changes, pagenum:pagenum, talks: talks, encode:encode});
+      var html = fc({lang: lang, msg: msg, category: name, subcategories:subcategories, changes:changes, pagenum:pagenum, talks: talks, encode:utf8.encode});
       res.simpleHtml(200, html);
     }
     return;

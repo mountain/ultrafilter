@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 var fs = require('fs'),
-fetch = require('../vendors/ultrafilter/fetch-rc'),
+fetch = require('../vendors/minimal/fetch-rc'),
 sys = require('sys');
 
 var arg = process.argv[1],

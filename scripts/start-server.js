@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 var fs = require('fs'),
-server = require('../vendors/ultrafilter/server'),
+server = require('../vendors/minimal/server'),
 sys = require('sys');
 
 var ultrafilter = process.argv[1],

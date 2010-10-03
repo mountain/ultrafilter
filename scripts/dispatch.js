@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 var fs = require('fs'),
-dispatch = require('../vendors/ultrafilter/dispatch-talk'),
+dispatch = require('../vendors/minimal/dispatch-talk'),
 sys = require('sys');
 
 var arg = process.argv[1],

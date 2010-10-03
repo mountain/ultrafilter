@@ -2,6 +2,7 @@ require('../lib/underscore');
 
 var sys = require('sys');
 
+var utf8 = require('../lib/utf8');
 var sqlclient = require("../vendors/libmysqlclient/mysql-libmysqlclient");
 
 var wikiConns = {};
@@ -28,31 +29,6 @@ function setupConns(env, lang) {
   rcConns[lang] = createConn(env['db-host'], env['db-user'], env['db-pwd'], env.rc[lang].db.rc);
 }
 
-function decode(utftext) {
-    var string = "";
-    var i = 0;
-    var c = c1 = c2 = 0;
-    while ( i < utftext.length ) {
-      c = utftext.charCodeAt(i);
-      if (c < 128) {
-        string += String.fromCharCode(c);
-        i++;
-      }
-      else if((c > 191) && (c < 224)) {
-        c2 = utftext.charCodeAt(i+1);
-        string += String.fromCharCode(((c & 31) << 6) | (c2 & 63));
-        i += 2;
-      }
-      else {
-        c2 = utftext.charCodeAt(i+1);
-        c3 = utftext.charCodeAt(i+2);
-        string += String.fromCharCode(((c & 15) << 12) | ((c2 & 63) << 6) | (c3 & 63));
-        i += 3;
-      }
-    }
-    return string;
-}
-
 function sqlTime(time) {
   return "'" + time.getUTCFullYear() + "-" + (time.getUTCMonth() + 1) + "-" + time.getUTCDate() +
   " " + time.getUTCHours() + ":" + time.getUTCMinutes() + ":" + time.getUTCSeconds() + "'" ;
@@ -64,7 +40,7 @@ exports.app = function(env) {
 
   var perpage = 50;
   return function(req, res, lang, name, noop, time) {
-    name = decode(unescape(name));
+    name = utf8.decode(unescape(name));
     if(time) {
       time = new Date(parseInt(time));
     } else {

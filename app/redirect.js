@@ -1,4 +1,4 @@
-var util = require('../vendors/ultrafilter/util'),
+var util = require('../vendors/minimal/util'),
     sys  = require('sys');
 
 exports.app = function(env) {

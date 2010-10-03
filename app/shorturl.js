@@ -1,5 +1,5 @@
 var _    = require('../lib/underscore')._,
-    util = require('../vendors/ultrafilter/util');
+    util = require('../vendors/minimal/util');
 
 exports.app = function(env) {
   var supported = env.i18n.supported;

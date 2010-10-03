@@ -23,7 +23,7 @@ exports.start = function(settings) {
 
   _.extend(env, settings);
 
-  var cacheSize = env.cacheSize || 1000;
+  var cacheSize = env.cacheSize || 10000;
   env.cache = new (require('../../lib/cache').Cache)(cacheSize);
 
   env.logger = (function() {

@@ -1,6 +1,7 @@
 var _ = require('../../lib/underscore')._,
     sys = require('sys'),
     router = require('./node-router'),
+    services = require('../../config/services').services,
     i18n = require('../../config/i18n').i18n,
     rc = require('../../config/rc').rc,
     routers = require('../../config/routers').routers;
@@ -14,6 +15,7 @@ var env = {
     else
       return 'http://' + this.host + ':' + this.port;
   },
+  services: services,
   i18n: i18n,
   rc: rc,
   routers: routers

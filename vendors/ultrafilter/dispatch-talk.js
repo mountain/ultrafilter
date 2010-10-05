@@ -14,22 +14,24 @@ var env = {
 };
 
 function insertFc(env, rcId, pageId) {
-  env.rcConn.query("select fc_rc_id from filteredchanges where fc_rc_id = " + rcId,
+  env.rcConn.querySync("select fc_rc_id from filteredchanges where fc_rc_id = " + rcId,
     function(result) {
-      var rows = result.fetchAllSync();
-      if(rows.length === 0) {
-        _.each(cat.categories(env, pageId), function(cat_id) {
-          env.rcConn.query("insert into filteredchanges(fc_rc_id, fc_cat_id)" +
-               " values(" + rcId + "," + cat_id + ")"
-          );
+        result.fetchAllSync(function(rows) {
+          if(rows.length === 0) {
+            categories = cat.categories(env, pageId);
+            _.each(categories, function(cat_id) {
+              env.rcConn.querySync("insert into filteredchanges(fc_rc_id, fc_cat_id)" +
+                   " values(" + rcId + "," + cat_id + ")"
+              );
+            });
+          }
         });
-      }
     }
   );
 }
 
 function insertNotification(env, rcId, user, talkTitle) {
-  env.rcConn.query("insert into notifications(ntf_user, ntf_talk_title, ntf_rc_id)" +
+  env.rcConn.querySync("insert into notifications(ntf_user, ntf_talk_title, ntf_rc_id)" +
        " values('" + user + "','" + talkTitle + "'," + rcId + ")");
 }
 
@@ -100,7 +102,6 @@ function notifyParticipant(env, talkTitle, callback) {
     response.on('end', function () {
       try {
         body = body.substring(1, body.length - 1);
-        util.log(body);
         var data = JSON.parse(body);
         for(var pageId in data.query.pages) {
           var page = data.query.pages[pageId];
@@ -121,29 +122,30 @@ function notifyParticipant(env, talkTitle, callback) {
 function dispatchTalk(env) {
   env.rcConn.query("select rc_id, rc_title from recentchanges where rc_ns=1 and rc_handled=0 limit 1",
     function(result) {
-      var rows = result.fetchAllSync();
-      var rcId, talkTitle;
-      if(rows.length > 0) {
-        rcId = rows[0].rc_id;
-        talkTitle = rows[0].rc_title;
+      result.fetchAllSync(function(rows) {
+        var rcId, talkTitle;
+        if(rows.length > 0) {
+          rcId = rows[0].rc_id;
+          talkTitle = rows[0].rc_title;
 
-        getArticle(env, talkTitle, function(pageId) {
-          insertFc(env, rcId, pageId);
-          env.rcConn.query("update recentchanges set rc_handled = 1 where rc_id =" + rcId);
-          util.log("rc(" + rcId + ") had been handled.");
-        });
-
-        notifyParticipant(env, talkTitle, function(participants) {
-          var notified = [];
-          _.each(participants, function(participant) {
-            var user = participant.user;
-            if(_.indexOf(notified, user) === -1) {
-              insertNotification(env, rcId, user, talkTitle);
-              notified.push(user);
-            }
+          getArticle(env, talkTitle, function(pageId) {
+            insertFc(env, rcId, pageId);
+            env.rcConn.query("update recentchanges set rc_handled = 1 where rc_id =" + rcId);
+            util.log("rc(" + rcId + ") had been handled.");
           });
-        });
-      }
+
+          notifyParticipant(env, talkTitle, function(participants) {
+            var notified = [];
+            _.each(participants, function(participant) {
+              var user = participant.user;
+              if(_.indexOf(notified, user) === -1) {
+                insertNotification(env, rcId, user, talkTitle);
+                notified.push(user);
+              }
+            });
+          });
+        }
+      });
     }
   );
 }

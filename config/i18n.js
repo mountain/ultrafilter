@@ -3,7 +3,11 @@ exports.i18n = {
   rtl: ['he'],
   msg: {
     cs: {
-      title: 'Zkracovač adres Wikipedie',
+      byfor: '',
+      services: '',
+      recentchanges: '',
+      notifications: '',
+      shorturl: 'Zkracovač adres Wikipedie',
       lable: 'Název: ',
       wiki: 'Wiki',
       shorten: 'Zkrátit!',
@@ -11,7 +15,11 @@ exports.i18n = {
       problem: 'Nastal problém!'
     },
     en: {
-      title: 'Wikipedia Shorturl Service',
+      byfor: 'by <a href="http://github.com/mountain/ultrafilter">Ultrafilter</a> for a better <a href="http://www.wikipedia.org/">Wikipedia</a> community.',
+      services: 'Services',
+      recentchanges: 'Changes under a category',
+      notifications: 'Your discussions',
+      shorturl: 'Wikipedia Shorturl Service',
       lable: 'Title: ',
       wiki: 'Wiki',
       shorten: 'Shorten It!',
@@ -19,7 +27,11 @@ exports.i18n = {
       problem: 'Sorry, a problem occurred!'
     },
     he: {
-      title: 'שירות קיצור הכתובת של ויקיפדיה',
+      byfor: '',
+      services: '',
+      recentchanges: '',
+      notifications: '',
+      shorturl: 'שירות קיצור הכתובת של ויקיפדיה',
       lable: 'שם הדף: ',
       wiki: 'ויקי',
       shorten: 'לקצר!',
@@ -27,7 +39,11 @@ exports.i18n = {
       problem: 'אנו מצטערים על התקלה!'
     },
     ml: {
-      title: 'വിക്കിപീഡിയ ചെറിയ യു.ആർ.എൽ. സേവനം',
+      byfor: '',
+      services: '',
+      recentchanges: '',
+      notifications: '',
+      shorturl: 'വിക്കിപീഡിയ ചെറിയ യു.ആർ.എൽ. സേവനം',
       lable: 'തലക്കെട്ട്: ',
       wiki: 'വിക്കി',
       shorten: 'ചെറുതാക്കൂ!',
@@ -35,7 +51,11 @@ exports.i18n = {
       problem: 'Sorry, a problem occurred!'
     },
     ru: {
-      title: 'Служба сокращения адреса Википедии',
+      byfor: '',
+      services: '',
+      recentchanges: '',
+      notifications: '',
+      shorturl: 'Служба сокращения адреса Википедии',
       lable: 'Заголовок: ',
       wiki: 'Вики',
       shorten: 'Сократить!',
@@ -43,7 +63,11 @@ exports.i18n = {
       problem: 'Мы извиняемся за неисправность!'
     },
     ta: {
-      title: 'விக்கிப்பீடியா குறுஞ்சுட்டி சேவை',
+      byfor: '',
+      services: '',
+      recentchanges: '',
+      notifications: '',
+      shorturl: 'விக்கிப்பீடியா குறுஞ்சுட்டி சேவை',
       lable: 'தலைப்பு: ',
       wiki: 'விக்கி',
       shorten: 'குறுக்கு!',
@@ -51,12 +75,40 @@ exports.i18n = {
       problem: 'மன்னிக்கவும், பிழை நேரிட்டது!'
     },
     zh: {
-      title: '维基缩址服务',
+      byfor: '为了更好的<a href="http://www.wikipedia.org/">维基</a>社群由<a href="http://github.com/mountain/ultrafilter">Ultrafilter</a>提供服务。',
+      services: '服务',
+      recentchanges: '分类更新',
+      notifications: '关注的讨论',
+      shorturl: '缩址服务',
       lable: '标题： ',
       wiki: '维基',
       shorten: '缩址！',
       notfound: '未找到条目！',
       problem: '抱歉，程序出现问题！'
-    }
+    },
+    'zh-cn': {
+      byfor: '为了更好的<a href="http://www.wikipedia.org/">维基</a>社群由<a href="http://github.com/mountain/ultrafilter">Ultrafilter</a>提供服务。',
+      services: '服务',
+      recentchanges: '分类更新',
+      notifications: '关注的讨论',
+      shorturl: '缩址服务',
+      lable: '标题： ',
+      wiki: '维基',
+      shorten: '缩址！',
+      notfound: '未找到条目！',
+      problem: '抱歉，程序出现问题！'
+    },
+    'zh-tw': {
+      byfor: '为了更好的<a href="http://www.wikipedia.org/">维基</a>社群由<a href="http://github.com/mountain/ultrafilter">Ultrafilter</a>提供服务。',
+      services: '服务',
+      recentchanges: '分类更新',
+      notifications: '关注的讨论',
+      shorturl: '缩址服务',
+      lable: '标题： ',
+      wiki: '维基',
+      shorten: '缩址！',
+      notfound: '未找到条目！',
+      problem: '抱歉，程序出现问题！'
+    },
   }
 };

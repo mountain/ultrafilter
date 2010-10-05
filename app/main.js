@@ -1,9 +1,11 @@
 exports.app = function(env) {
-  var baseUrl = env.baseUrl();
+  var langs = env.services.langs;
+  var msg = env.i18n.msg;
+  var main = env.templates['main'];
 
   return function(req, res) {
-    res.redirect(baseUrl + '/s/');
-    return;
+      var html = main({langs: langs, msg: msg});
+      res.simpleHtml(200, html);
   };
 };
 

@@ -12,13 +12,16 @@ var env = {
 function insertRc(rcConn, rcId, ns, pageId, title, timestamp) {
   rcConn.query("select rc_id from recentchanges where rc_id = " + rcId,
     function(result) {
-      var rows = result.fetchAllSync();
-      if(rows.length === 0) {
-        rcConn.query("insert into recentchanges(rc_id, rc_ns, rc_page_id, rc_title, rc_timestamp)" +
-             " values(" + rcId + "," + ns + "," + pageId + ",'" +  title + "','" + timestamp +"')"
-        );
-        util.log(rcId, ns, pageId, title, timestamp);
-      }
+      result.fetchAll(function(rows) {
+        if(rows.length === 0) {
+          rcConn.query("insert into recentchanges(rc_id, rc_ns, rc_page_id, rc_title, rc_timestamp)" +
+               " values(" + rcId + "," + ns + "," + pageId + ",'" +  title + "','" + timestamp +"')",
+               function(result) {
+                 util.log(rcId, ns, pageId, title, timestamp);
+               }
+          );
+        }
+      });
     }
   );
 }
@@ -57,7 +60,7 @@ function fetchRc(host, rcConn) {
           }
           body = '';
         } catch (e) {
-          sys.puts('error when parsing json: ' + e);
+          sys.puts('error when fetching rc: ' + e);
           body = '';
        }
       });

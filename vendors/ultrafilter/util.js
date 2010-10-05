@@ -7,3 +7,7 @@ exports.log = function() {
     sys.puts(_.toArray(arguments).join(" "));
 };
 
+exports.throwerr = function(err) {
+  if(err) throw err;
+};
+

@@ -14,34 +14,40 @@ var env = {
 };
 
 function insertFc(env, rcId, pageId) {
-  env.rcConn.query("select fc_rc_id from filteredchanges where fc_rc_id = " + rcId,
+  env.rcConn.querySync("select fc_rc_id from filteredchanges where fc_rc_id = " + rcId,
     function(result) {
-      var rows = result.fetchAllSync();
-      if(rows.length === 0) {
-        _.each(cat.categories(env, pageId), function(cat_id) {
-          env.rcConn.query("insert into filteredchanges(fc_rc_id, fc_cat_id)" +
-               " values(" + rcId + "," + cat_id + ")"
-          );
+        result.fetchAllSync(function(rows) {
+          if(rows.length === 0) {
+            categories = cat.categories(env, pageId);
+            _.each(categories, function(cat_id) {
+              env.rcConn.querySync("insert into filteredchanges(fc_rc_id, fc_cat_id)" +
+                   " values(" + rcId + "," + cat_id + ")"
+              );
+            });
+          }
         });
-      }
     }
   );
 }
 
 function populateCat(env) {
-  env.rcConn.query("select rc_id, rc_page_id from recentchanges where rc_ns=0 and rc_handled=0 limit 1",
+  env.rcConn.querySync("select rc_id, rc_page_id from recentchanges where rc_ns=0 and rc_handled=0 limit 1",
     function(result) {
-      var rows = result.fetchAllSync();
-      var rcId, pageId;
-      if(rows.length > 0) {
-        rcId = rows[0].rc_id;
-        pageId = rows[0].rc_page_id;
-        insertFc(env, rcId, pageId);
-      }
-      if(rcId) {
-        env.rcConn.query("update recentchanges set rc_handled = 1 where rc_id =" + rcId);
-        util.log("rc(" + rcId + ") had been handled.");
-      }
+      result.fetchAllSync(function(rows) {
+        var rcId, pageId;
+        if(rows.length > 0) {
+          rcId = rows[0].rc_id;
+          pageId = rows[0].rc_page_id;
+          insertFc(env, rcId, pageId);
+        }
+        if(rcId) {
+          env.rcConn.querySync("update recentchanges set rc_handled = 1 where rc_id =" + rcId,
+            function(result) {
+                util.log("rc(" + rcId + ") had been handled.");
+            }
+          );
+        }
+      });
     }
   );
 }

@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<%= lang %>" lang="<%= lang %>" dir="<%= dir %>">
 <head>
    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title><%= msg[lang]['shorturl'] %></title>
+    <title><%= msg[lang]['recentchanges'] %></title>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js" type="text/javascript" charset="utf-8"></script>
     <script type="text/javascript" charset="utf-8">var lang="<%= lang %>", host = "<%= baseUrl %>", notfound = "<%= msg[lang]['notfound'] %>";</script>
     <script src="/javascripts/application.js" type="text/javascript" charset="utf-8"></script>
@@ -11,16 +11,15 @@
 <body>
     <div id="langs"> [&nbsp;
     <% for(var ind in langs) { var l = langs[ind]; %>
-      <% if(services.isSupported(l, 's')) { %><a href="/<%= l %>/s"><%= l %></a>&nbsp;<% } %>
+      <% if(services.isSupported(l, 'rc')) { %><a href="/<%= l %>/rc"><%= l %></a>&nbsp;<% } %>
     <% } %>
     ] </div>
-    <h2 id="title"><%= msg[lang]['shorturl'] %></h2>
-    <div id="querybox"><%= msg[lang]['lable'] %>&nbsp;
-    <input id="query" type=text value="<%= msg[lang]['wiki'] %>">
-    <input id="submit" type=submit value="<%= msg[lang]['shorten'] %>"></div>
-    <div id="result"></div>
+    <h2 id="title"><%= msg[lang]['recentchanges'] %></h2>
+    <div id="querybox"><%= msg[lang]['category'] %>&nbsp;
+    <input id="query" type=text value="<%= msg[lang]['math'] %>">
+    <input id="submit" type=submit value="<%= msg[lang]['submit'] %>"></div>
     <p id="team"><%= msg[lang]['byfor'] %></p>
-    <script type="text/javascript" charset="utf-8">$(s);</script>
+    <script type="text/javascript" charset="utf-8">$(rc);</script>
 </body>
 </html>
 

@@ -1,4 +1,4 @@
-function app() {
+function s() {
   $("#submit").click(function() {
     var title = $("#query").val();
     if(title && title !== "") {
@@ -18,6 +18,26 @@ function app() {
           }
         }
       });
+    };
+  });
+}
+
+function rc() {
+  $("#submit").click(function() {
+    var title = $("#query").val();
+    if(title && title !== "") {
+      var encoded = escape(utf8(title));
+      window.location = host + "/" + lang + "/rc/" + encoded;
+    };
+  });
+}
+
+function n() {
+  $("#submit").click(function() {
+    var title = $("#query").val();
+    if(title && title !== "") {
+      var encoded = escape(utf8(title));
+      window.location = host + "/" + lang + "/n/" + encoded;
     };
   });
 }

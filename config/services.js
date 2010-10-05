@@ -31,12 +31,6 @@ exports.services = {
     }
     return result;
   },
-  db: {
-    zh: {
-      wiki: 'wiki',
-      rc: 'rc'
-    },
-  },
   batch: {
     zh: {
       fetch: 3000,

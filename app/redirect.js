@@ -12,7 +12,7 @@ exports.app = function(env) {
         pageId = parseInt(title.toLowerCase(), 36),
         host = lang + '.wikipedia.org';
 
-    var url = cache?cache.getItem(lang + ':' + pageId):undefined;
+    var url = cache?cache.getItem('u:' + lang + ':' + pageId):undefined;
 
     if(url) {
       res.redirect(url);
@@ -48,7 +48,7 @@ exports.app = function(env) {
             env.logger('error when parsing json: ' + e);
           }
           if(url) {
-            cache.setItem(lang + ':' + pageId, url);
+            cache.setItem('u:' + lang + ':' + pageId, url);
             env.logger('cache put: (' + lang + ':' + pageId + ')');
             env.logger('cache stats: (hits ' + cache.stats.hits + ', misses ' + cache.stats.misses + ')');
             res.redirect(url);

@@ -14,14 +14,6 @@
 
        <h2 id="title" class="span-24 last"><%= category %></h2>
 
-       <div id="team" class="span-3 colborder">
-         <p>分类最近更新：
-         [ cs  en  he  ml  ru  ta  zh  ]</p>
-         <p>维基短址服务：
-         [ cs  en  he  ml  ru  ta  zh  ]</p>
-         <p>by <a href="http://github.com/mountain/ultrafilter">Ultrafilter</a></p>
-       </div>
-
        <div class="span-6 colborder">
        <h3 id="title" class="span-6">最近更新</h3>
        <ul id="changes" class="span-6">
@@ -29,11 +21,6 @@
          <li><%= change.rc_timestamp.toString().split(' ')[4] %>&nbsp;&nbsp;<a href="/r/<%= lang %>/<%= change.rc_page_id.toString(36) %>"><%= change.rc_title %></a></li>
        <% } %>
        </ul>
-       <span id="pages" class="span-6">
-       <% for(var i=1;i<=pagenum;i++) { %>
-         <a href="/rc/<%= lang %>/<%= escape(encode(category)) %>/<%= i %>"><%= i %></a>&nbsp;&nbsp;
-       <% } %>
-       </span>
        </div>
 
        <div class="span-6 colborder">
@@ -44,16 +31,6 @@
        <% } %>
        </ul>
        </div>
-
-       <div class="span-4 last">
-       <h3 id="title" class="span-4">子分类</h3>
-       <ul id="subcategories" class="span-4">
-       <% for(var ind in subcategories) { var sub = subcategories[ind]; %>
-         <% if(sub) { %><li><a href="/rc/<%= lang %>/<%= sub.cat_title %>"><%= sub.cat_title %></a></li><% } %>
-       <% } %>
-       </ul>
-       </div>
-
    </div>
    </body>
 </html>

@@ -47,9 +47,19 @@ PseudoConn.prototype.querySync = function(sql, callback) {
   }
   if(results !== undefined) try {
     if(callback) callback(new PseudoResult(this, results));
+    if(results) results.freeSync();
   } catch(e) {
     util.log("err in query callback: " + e);
   }
+}
+
+PseudoConn.prototype.queryFetch = function(sql, callback) {
+  var fetch = function(rows) {
+    callback(rows);
+  };
+  this.query(sql, function(results) {
+    results.fetchAll(fetch);
+  });
 }
 
 PseudoConn.prototype.check = function() {

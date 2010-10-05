@@ -19,7 +19,6 @@ exports.app = function(env) {
       html = unsupported({lang: lang, msg: msg});
     }
     res.simpleHtml(200, html);
-    return;
   }
 };
 

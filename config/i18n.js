@@ -19,6 +19,8 @@ exports.i18n = {
       submit: 'Submit',
       user: 'User: ',
       userdiscussions: 'Your discussions',
+      supcategory: 'Supcategories',
+      subcategory: 'Subcategores',
     },
     en: {
       byfor: 'by <a href="http://github.com/mountain/ultrafilter">Ultrafilter</a> for a better <a href="http://www.wikipedia.org/">Wikipedia</a> community',
@@ -37,6 +39,8 @@ exports.i18n = {
       submit: 'Submit',
       user: 'User: ',
       userdiscussions: 'Your discussions',
+      supcategory: 'Supcategories',
+      subcategory: 'Subcategores',
     },
     he: {
       byfor: 'by <a href="http://github.com/mountain/ultrafilter">Ultrafilter</a> for a better <a href="http://www.wikipedia.org/">Wikipedia</a> community',
@@ -55,6 +59,8 @@ exports.i18n = {
       submit: 'Submit',
       user: 'User: ',
       userdiscussions: 'Your discussions',
+      supcategory: 'Supcategories',
+      subcategory: 'Subcategores',
     },
     ml: {
       byfor: 'by <a href="http://github.com/mountain/ultrafilter">Ultrafilter</a> for a better <a href="http://www.wikipedia.org/">Wikipedia</a> community',
@@ -73,6 +79,8 @@ exports.i18n = {
       submit: 'Submit',
       user: 'User: ',
       userdiscussions: 'Your discussions',
+      supcategory: 'Supcategories',
+      subcategory: 'Subcategores',
     },
     ru: {
       byfor: 'by <a href="http://github.com/mountain/ultrafilter">Ultrafilter</a> for a better <a href="http://www.wikipedia.org/">Wikipedia</a> community',
@@ -91,6 +99,8 @@ exports.i18n = {
       submit: 'Submit',
       user: 'User: ',
       userdiscussions: 'Your discussions',
+      supcategory: 'Supcategories',
+      subcategory: 'Subcategores',
     },
     ta: {
       byfor: 'by <a href="http://github.com/mountain/ultrafilter">Ultrafilter</a> for a better <a href="http://www.wikipedia.org/">Wikipedia</a> community',
@@ -109,6 +119,8 @@ exports.i18n = {
       submit: 'Submit',
       user: 'User: ',
       userdiscussions: 'Your discussions',
+      supcategory: 'Supcategories',
+      subcategory: 'Subcategores',
     },
     zh: {
       byfor: '为了更好的<a href="http://www.wikipedia.org/">维基</a>社群由<a href="http://github.com/mountain/ultrafilter">Ultrafilter</a>提供服务',
@@ -127,6 +139,8 @@ exports.i18n = {
       submit: '提交',
       user: '用户： ',
       userdiscussions: '关注的讨论',
+      supcategory: '父分类',
+      subcategory: '子分类',
     },
     'zh-cn': {
       byfor: '为了更好的<a href="http://www.wikipedia.org/">维基</a>社群由<a href="http://github.com/mountain/ultrafilter">Ultrafilter</a>提供服务',
@@ -145,6 +159,8 @@ exports.i18n = {
       submit: '提交',
       user: '用户： ',
       userdiscussions: '关注的讨论',
+      supcategory: '父分类',
+      subcategory: '子分类',
     },
     'zh-tw': {
       byfor: '为了更好的<a href="http://www.wikipedia.org/">维基</a>社群由<a href="http://github.com/mountain/ultrafilter">Ultrafilter</a>提供服务',
@@ -163,6 +179,8 @@ exports.i18n = {
       submit: '提交',
       user: '用户： ',
       userdiscussions: '关注的讨论',
+      supcategory: '父分类',
+      subcategory: '子分类',
     },
   }
 };

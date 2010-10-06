@@ -2,9 +2,10 @@ require('../lib/underscore');
 
 var sys = require('sys');
 
-var utf8 = require('../lib/utf8');
-var sql  = require("../vendors/ultrafilter/sql"),
-    util = require('../vendors/ultrafilter/util');
+var utf8  = require('../lib/utf8');
+var sql   = require("../vendors/ultrafilter/sql"),
+    util  = require('../vendors/ultrafilter/util'),
+    util2 = require('../vendors/minimal/util');
 
 var wikiConns = {};
 var rcConns = {};
@@ -20,6 +21,7 @@ exports.app = function(env) {
 
   var services = env.services,
       langs = services.langs,
+      baseUrl = env.baseUrl(),
       msg = env.i18n.msg,
       unknown = env.templates['unknown'],
       cc = env.templates['categorychanges'];
@@ -29,6 +31,9 @@ exports.app = function(env) {
   var perpage = 100;
   return function(req, res, lang, name) {
     name = utf8.decode(unescape(name));
+    var dir    = util2.htmlDir(env, lang),
+        subcat = msg[lang].subcategory,
+        supcat = msg[lang].supcategory;
 
     //util.log("handle request for " + lang + ":" + name);
     wikiConn = wikiConns[lang];
@@ -48,7 +53,10 @@ exports.app = function(env) {
               rcConn.queryFetch(
                 "select rc.rc_title, rc.rc_page_id, rc.rc_timestamp from filteredchanges as fc, recentchanges as rc where fc.fc_rc_id = rc.rc_id and rc.rc_ns = 1 and fc.fc_cat_id = " + catId + " order by rc.rc_timestamp desc limit " + perpage,
                 function(talks) {
-          var html = cc({lang: lang, langs: langs, services: services, msg: msg, category: name, changes:changes, talks: talks, encode:utf8.encode});
+          var html = cc({
+            baseUrl: baseUrl, lang: lang, langs: langs, services: services, msg: msg, dir: dir,
+            category: name, changes:changes, talks: talks, subcat: subcat, supcat: supcat, encode:utf8.encode
+          });
           res.simpleHtml(200, html);
                 }
               );

@@ -1,3 +1,4 @@
+//Shorturl
 function s() {
   $("#submit").click(function() {
     var title = $("#query").val();
@@ -22,6 +23,7 @@ function s() {
   });
 }
 
+//Recentchanges
 function rc() {
   $("#submit").click(function() {
     var title = $("#query").val();
@@ -32,6 +34,35 @@ function rc() {
   });
 }
 
+//Categorychanges
+function cc() {
+  var encoded = escape(utf8(category));
+
+  var query = host + "/api/cat/" + lang + "/" + encoded + "/parents";
+  $.getJSON(query, function(data) {
+    if(!data) return;
+    var html = "<h3>" + supcat + "</h3><ul>";
+    for(var ind in data) {
+      var cat = data[ind];
+      html += ("<li><a href='/" + lang + "/rc/" + escape(utf8(cat)) +"'>" + cat + "</a></li>");
+    }
+    html += ("</ul>");
+    $("#supcategory").html(html);
+  });
+  query = host + "/api/cat/" + lang + "/" + encoded + "/children";
+  $.getJSON(query, function(data) {
+    if(!data) return;
+    var html = "<h3>" + subcat + "</h3><ul>";
+    for(var ind in data) {
+      var cat = data[ind];
+      html += ("<li><a href='/" + lang + "/rc/" + escape(utf8(cat)) +"'>" + cat + "</a></li>");
+    }
+    html += ("</ul>");
+    $("#subcategory").html(html);
+  });
+}
+
+//Notifications
 function n() {
   $("#submit").click(function() {
     var title = $("#query").val();

@@ -5,7 +5,6 @@
     <title><%= msg[lang]['recentchanges'] %></title>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js" type="text/javascript" charset="utf-8"></script>
     <script type="text/javascript" charset="utf-8">var lang="<%= lang %>", host = "<%= baseUrl %>", notfound = "<%= msg[lang]['notfound'] %>";</script>
-    <script src="/javascripts/application.js" type="text/javascript" charset="utf-8"></script>
     <link rel="stylesheet" href="/styles/style.css" type="text/css" media="screen" charset="utf-8" />
 </head>
 <body>
@@ -19,6 +18,7 @@
     <input id="query" type=text value="<%= msg[lang]['math'] %>">
     <input id="submit" type=submit value="<%= msg[lang]['submit'] %>"></div>
     <p id="team"><%= msg[lang]['byfor'] %></p>
+    <script src="/javascripts/application.js" type="text/javascript" charset="utf-8"></script>
     <script type="text/javascript" charset="utf-8">$(rc);</script>
 </body>
 </html>

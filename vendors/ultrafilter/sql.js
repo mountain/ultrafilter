@@ -22,10 +22,11 @@ PseudoConn.prototype.connect = function() {
 };
 
 PseudoConn.prototype.query = function(sql, callback) {
+  var pconn = this;
   var callbackWithErr = function(err, results) {
     if(err) {
       util.log("err at query: " + err);
-      this.check();
+      pconn.check();
     } else {
       try {
         if(callback) callback(new PseudoResult(this, results));
@@ -38,16 +39,17 @@ PseudoConn.prototype.query = function(sql, callback) {
 }
 
 PseudoConn.prototype.querySync = function(sql, callback) {
+  var pconn = this;
   var results = undefined;
   try {
     results = this.conn.querySync(sql);
   } catch(e) {
     util.log("err at query: " + e);
-    this.check();
+    pconn.check();
   }
   if(results !== undefined) try {
     if(callback) callback(new PseudoResult(this, results));
-    if(results) results.freeSync();
+    if(results && results !== true) results.freeSync();
   } catch(e) {
     util.log("err in query callback: " + e);
   }
@@ -59,6 +61,15 @@ PseudoConn.prototype.queryFetch = function(sql, callback) {
   };
   this.query(sql, function(results) {
     results.fetchAll(fetch);
+  });
+}
+
+PseudoConn.prototype.queryFetchSync = function(sql, callback) {
+  var fetch = function(rows) {
+    callback(rows);
+  };
+  this.querySync(sql, function(results) {
+    results.fetchAllSync(fetch);
   });
 }
 
@@ -78,10 +89,11 @@ function PseudoResult(conn, results) {
 }
 
 PseudoResult.prototype.fetchAll = function(callback) {
+  var pr = this;
   var callbackWithErr = function(err, rows) {
     if(err) {
       util.log("err at fetching: " + err);
-      this.conn.check();
+      pr.conn.check();
     } else {
       try {
         if(callback) callback(rows);
@@ -94,12 +106,13 @@ PseudoResult.prototype.fetchAll = function(callback) {
 }
 
 PseudoResult.prototype.fetchAllSync = function(callback) {
+  var pr = this;
   var rows = undefined;
   try {
     rows = this.results.fetchAllSync();
   } catch(e) {
     util.log("err at fetching: " + e);
-    this.conn.check();
+    pr.conn.check();
   }
   if(rows !== undefined) try {
     if(callback) callback(rows);

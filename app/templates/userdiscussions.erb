@@ -1,0 +1,23 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="zh">
+  <head>
+     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+     <title><%= msg[lang]['userdiscussions'] %> : <%= user %></title>
+     <link rel="stylesheet" href="/styles/style.css" type="text/css" media="screen" charset="utf-8" />
+  <body>
+  <div id="langs"> [&nbsp;
+  <% for(var ind in langs) { var l = langs[ind]; %>
+    <% if(services.isSupported(l, 'n')) { %><a href="/<%= l %>/n"><%= l %></a>&nbsp;<% } %>
+  <% } %>
+  ] </div>
+  <h2 id="title"><%= msg[lang]['userdiscussions'] %> : <%= user %></h2>
+  <div id="userdiscussions">
+  <ul id="discussions">
+  <% for(var ind in discussions) { var discuss = discussions[ind]; %>
+    <li><%= discuss.rc_timestamp.toString().split(' ')[4] %>&nbsp;&nbsp;<a href="/r/<%= lang %>/<%= discuss.rc_page_id.toString(36) %>"><%= discuss.ntf_talk_title %></a></li>
+  <% } %>
+  </ul>
+  </div>
+ </body>
+</html>
+

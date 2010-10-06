@@ -8,6 +8,7 @@ exports.i18n = {
       recentchanges: 'Changes under a category',
       notifications: 'Your discussions',
       shorturl: 'Zkracovač adres Wikipedie',
+      recenttalks: 'Recent talks',
       lable: 'Název: ',
       wiki: 'Wiki',
       shorten: 'Zkrátit!',
@@ -17,6 +18,7 @@ exports.i18n = {
       math: 'Mathematics',
       submit: 'Submit',
       user: 'User: ',
+      userdiscussions: 'Your discussions',
     },
     en: {
       byfor: 'by <a href="http://github.com/mountain/ultrafilter">Ultrafilter</a> for a better <a href="http://www.wikipedia.org/">Wikipedia</a> community',
@@ -24,6 +26,7 @@ exports.i18n = {
       recentchanges: 'Changes under a category',
       notifications: 'Your discussions',
       shorturl: 'Wikipedia Shorturl Service',
+      recenttalks: 'Recent talks',
       lable: 'Title: ',
       wiki: 'Wiki',
       shorten: 'Shorten It!',
@@ -33,6 +36,7 @@ exports.i18n = {
       math: 'Mathematics',
       submit: 'Submit',
       user: 'User: ',
+      userdiscussions: 'Your discussions',
     },
     he: {
       byfor: 'by <a href="http://github.com/mountain/ultrafilter">Ultrafilter</a> for a better <a href="http://www.wikipedia.org/">Wikipedia</a> community',
@@ -40,6 +44,7 @@ exports.i18n = {
       recentchanges: 'Changes under a category',
       notifications: 'Your discussions',
       shorturl: 'שירות קיצור הכתובת של ויקיפדיה',
+      recenttalks: 'Recent talks',
       lable: 'שם הדף: ',
       wiki: 'ויקי',
       shorten: 'לקצר!',
@@ -49,6 +54,7 @@ exports.i18n = {
       math: 'Mathematics',
       submit: 'Submit',
       user: 'User: ',
+      userdiscussions: 'Your discussions',
     },
     ml: {
       byfor: 'by <a href="http://github.com/mountain/ultrafilter">Ultrafilter</a> for a better <a href="http://www.wikipedia.org/">Wikipedia</a> community',
@@ -56,6 +62,7 @@ exports.i18n = {
       recentchanges: 'Changes under a category',
       notifications: 'Your discussions',
       shorturl: 'വിക്കിപീഡിയ ചെറിയ യു.ആർ.എൽ. സേവനം',
+      recenttalks: 'Recent talks',
       lable: 'തലക്കെട്ട്: ',
       wiki: 'വിക്കി',
       shorten: 'ചെറുതാക്കൂ!',
@@ -65,6 +72,7 @@ exports.i18n = {
       math: 'Mathematics',
       submit: 'Submit',
       user: 'User: ',
+      userdiscussions: 'Your discussions',
     },
     ru: {
       byfor: 'by <a href="http://github.com/mountain/ultrafilter">Ultrafilter</a> for a better <a href="http://www.wikipedia.org/">Wikipedia</a> community',
@@ -72,6 +80,7 @@ exports.i18n = {
       recentchanges: 'Changes under a category',
       notifications: 'Your discussions',
       shorturl: 'Служба сокращения адреса Википедии',
+      recenttalks: 'Recent talks',
       lable: 'Заголовок: ',
       wiki: 'Вики',
       shorten: 'Сократить!',
@@ -81,6 +90,7 @@ exports.i18n = {
       math: 'Mathematics',
       submit: 'Submit',
       user: 'User: ',
+      userdiscussions: 'Your discussions',
     },
     ta: {
       byfor: 'by <a href="http://github.com/mountain/ultrafilter">Ultrafilter</a> for a better <a href="http://www.wikipedia.org/">Wikipedia</a> community',
@@ -88,6 +98,7 @@ exports.i18n = {
       recentchanges: 'Changes under a category',
       notifications: 'Your discussions',
       shorturl: 'விக்கிப்பீடியா குறுஞ்சுட்டி சேவை',
+      recenttalks: 'Recent talks',
       lable: 'தலைப்பு: ',
       wiki: 'விக்கி',
       shorten: 'குறுக்கு!',
@@ -97,6 +108,7 @@ exports.i18n = {
       math: 'Mathematics',
       submit: 'Submit',
       user: 'User: ',
+      userdiscussions: 'Your discussions',
     },
     zh: {
       byfor: '为了更好的<a href="http://www.wikipedia.org/">维基</a>社群由<a href="http://github.com/mountain/ultrafilter">Ultrafilter</a>提供服务',
@@ -104,6 +116,7 @@ exports.i18n = {
       recentchanges: '分类更新',
       notifications: '关注的讨论',
       shorturl: '缩址服务',
+      recenttalks: '分类讨论',
       lable: '标题： ',
       wiki: '维基',
       shorten: '缩址！',
@@ -113,6 +126,7 @@ exports.i18n = {
       math: '数学',
       submit: '提交',
       user: '用户： ',
+      userdiscussions: '关注的讨论',
     },
     'zh-cn': {
       byfor: '为了更好的<a href="http://www.wikipedia.org/">维基</a>社群由<a href="http://github.com/mountain/ultrafilter">Ultrafilter</a>提供服务',
@@ -120,6 +134,7 @@ exports.i18n = {
       recentchanges: '分类更新',
       notifications: '关注的讨论',
       shorturl: '缩址服务',
+      recenttalks: '分类讨论',
       lable: '标题： ',
       wiki: '维基',
       shorten: '缩址！',
@@ -129,6 +144,7 @@ exports.i18n = {
       math: '数学',
       submit: '提交',
       user: '用户： ',
+      userdiscussions: '关注的讨论',
     },
     'zh-tw': {
       byfor: '为了更好的<a href="http://www.wikipedia.org/">维基</a>社群由<a href="http://github.com/mountain/ultrafilter">Ultrafilter</a>提供服务',
@@ -136,6 +152,7 @@ exports.i18n = {
       recentchanges: '分类更新',
       notifications: '关注的讨论',
       shorturl: '缩址服务',
+      recenttalks: '分类讨论',
       lable: '标题： ',
       wiki: '维基',
       shorten: '缩址！',
@@ -145,6 +162,7 @@ exports.i18n = {
       math: '数学',
       submit: '提交',
       user: '用户： ',
+      userdiscussions: '关注的讨论',
     },
   }
 };

@@ -42,7 +42,7 @@ exports.start = function(settings) {
         server.get(routers[key], require('../../app/' + key).app(env));
     });
 
-    server.get(new RegExp("^/(.+)$"), router.staticDirHandler(env.path + 'public'));
+    server.get(new RegExp("^/(.+)$"), router.staticDirHandler(env.cache, env.path + 'public'));
 
     server.listen(env.port, env.host);
   }, 1000);

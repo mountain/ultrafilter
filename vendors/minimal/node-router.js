@@ -324,22 +324,33 @@ exports.staticHandler = function (filename) {
   };
 };
 
-exports.staticDirHandler = function(root, prefix) {
+exports.staticDirHandler = function(cache, root, prefix) {
   function loadResponseData(req, res, filename, callback) {
     var content_type = mime.getMime(filename);
     var encoding = (content_type.slice(0,4) === "text" ? "utf8" : "binary");
 
-    fs.readFile(filename, encoding, function(err, data) {
-      if(err) {
-        notFound(req, res, "Cannot find file: " + filename);
-        return;
-      }
+    var staticData = cache.getItem('static:' + filename);
+    if(!staticData) {
+      fs.readFile(filename, encoding, function(err, data) {
+        if(err) {
+          notFound(req, res, "Cannot find file: " + filename);
+          return;
+        }
+        staticData = data;
+        cache.setItem('static:' + filename, data);
+        var headers = [ [ "Content-Type"   , content_type ],
+                        [ "Content-Length" , staticData.length ],
+                        [ "Cache-Control"  , "public" ]
+                      ];
+        callback(headers, staticData, encoding);
+      });
+    } else {
       var headers = [ [ "Content-Type"   , content_type ],
-                      [ "Content-Length" , data.length ],
+                      [ "Content-Length" , staticData.length ],
                       [ "Cache-Control"  , "public" ]
                     ];
-      callback(headers, data, encoding);
-    });
+      callback(headers, staticData, encoding);
+    }
   }
 
   return function (req, res) {

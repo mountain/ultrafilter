@@ -7,9 +7,11 @@ exports.app = function(env) {
       admin = env.admin,
       msg = env.i18n.msg;
 
-  return function(req, res, lang, title) {
-    var lang = lang || 'en',
-        pageId = parseInt(title.toLowerCase(), 36),
+  return function(req, res, variant, title) {
+    var lang = env.services.variants[variant] || variant;
+    lang = lang || 'en';
+
+    var pageId = parseInt(title.toLowerCase(), 36),
         host = lang + '.wikipedia.org';
 
     var url = cache?cache.getItem('u:' + lang + ':' + pageId):undefined;
@@ -53,8 +55,8 @@ exports.app = function(env) {
             env.logger('cache stats: (hits ' + cache.stats.hits + ', misses ' + cache.stats.misses + ')');
             res.redirect(url);
           } else {
-            var dir = util.htmlDir(env, lang);
-            var html = problem({lang: lang, msg: msg, dir: dir});
+            var dir = util.htmlDir(env, variant);
+            var html = problem({variant: variant, msg: msg, dir: dir});
             res.simpleHtml(200, html);
           }
         });

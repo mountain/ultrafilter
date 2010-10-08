@@ -18,10 +18,11 @@ exports.app = function(env) {
 
   _.each(env.supported, function(lang) { setupConns(env, lang); } );
 
-  return function(req, res, lang, name) {
+  return function(req, res, variant, name) {
     name = utf8.decode(unescape(name));
+    var lang= env.services.variants[variant] || variant;
 
-    //util.log("handle request for " + lang + ":" + name);
+    //util.log("handle request for " + variant+ ":" + name);
     wikiConn = wikiConns[lang];
     wikiConn.queryFetch("select cat_id from category where cat_title = '" + name + "'",
       function(rows) {

@@ -8,14 +8,15 @@ exports.app = function(env) {
       msg = env.i18n.msg,
       home = env.templates['home'];
 
-  return function(req, res, lang) {
+  return function(req, res, variant) {
     var html = undefined;
-    var lang = lang || 'en';
-    if(_.indexOf(langs, lang) > -1) {
-      var dir = util.htmlDir(env, lang);
-      html = home({lang: lang, msg: msg, dir: dir, langs: langs, services: services});
+    var lang = env.services.variants[lang] || lang;
+    lang = lang || 'en';
+    if(_.indexOf(langs, variant) > -1) {
+      var dir = util.htmlDir(env, variant);
+      html = home({lang: lang, variant: variant, msg: msg, dir: dir, langs: langs, services: services});
     } else {
-      html = unsupported({lang: lang, msg: msg});
+      html = unsupported({lang: lang, variant: variant, msg: msg});
     }
     res.simpleHtml(200, html);
   };

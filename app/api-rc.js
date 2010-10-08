@@ -26,8 +26,9 @@ exports.app = function(env) {
 
   _.each(env.supported, function(lang) { setupConns(env, lang); } );
 
-  return function(req, res, lang, names, noop, time) {
+  return function(req, res, variant, names, noop, time) {
     names = utf8.decode(unescape(names));
+    var lang= env.services.variants[variant] || variant;
 
     if(time) {
       time = new Date(parseInt(time));
@@ -35,7 +36,7 @@ exports.app = function(env) {
       time = new Date(new Date().getTime() - 30*24*60*60*1000);
     }
 
-    util.log("handle request for " + lang + ":" + names + ":" + time);
+    util.log("handle request for " + variant+ ":" + names + ":" + time);
     wikiConn = wikiConns[lang];
     wikiConn.queryFetch("select cat_id from category where cat_title = '" + names + "'",
       function(rows) {

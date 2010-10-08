@@ -2,9 +2,9 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<%= lang %>" lang="<%= lang %>" dir="<%= dir %>">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title><%= msg[lang]['recentchanges'] %> : <%= category %></title>
+    <title><%= msg[variant]['recentchanges'] %> : <%= category %></title>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js" type="text/javascript" charset="utf-8"></script>
-    <script type="text/javascript" charset="utf-8">var lang="<%= lang %>", host = "<%= baseUrl %>", category = "<%= category %>", subcat = "<%= subcat %>", supcat = "<%= supcat %>", notfound = "<%= msg[lang]['notfound'] %>";</script>
+    <script type="text/javascript" charset="utf-8">var lang="<%= lang %>", variant="<%= variant %>", host = "<%= baseUrl %>", category = "<%= category %>", subcat = "<%= subcat %>", supcat = "<%= supcat %>", notfound = "<%= msg[variant]['notfound'] %>";</script>
     <script src="/javascripts/application.js" type="text/javascript" charset="utf-8"></script>
     <link rel="stylesheet" href="/styles/style.css" type="text/css" media="screen" charset="utf-8" />
   <body>
@@ -13,20 +13,20 @@
     <% if(services.isSupported(l, 'rc')) { %><a href="/<%= l %>/rc"><%= l %></a>&nbsp;<% } %>
   <% } %>
   ] </div>
-  <h2 id="title"><%= msg[lang]['recentchanges'] %> : <%= category %></h2>
+  <h2 id="title"><%= msg[variant]['recentchanges'] %> : <%= category %></h2>
   <div id="recentchanges">
-  <h3><%= msg[lang]['recentchanges'] %></h3>
+  <h3><%= msg[variant]['recentchanges'] %></h3>
   <ul id="changes">
   <% for(var ind in changes) { var change = changes[ind]; %>
-    <li><%= change.rc_timestamp.toString().split(' ')[4] %>&nbsp;&nbsp;<a href="/r/<%= lang %>/<%= change.rc_page_id.toString(36) %>"><%= change.rc_title %></a></li>
+    <li><%= change.rc_timestamp.toString().split(' ')[4] %>&nbsp;&nbsp;<a href="/r/<%= variant%>/<%= change.rc_page_id.toString(36) %>"><%= change.rc_title %></a></li>
   <% } %>
   </ul>
   </div>
   <div id="recenttalks">
-  <h3><%= msg[lang]['recenttalks'] %></h3>
+  <h3><%= msg[variant]['recenttalks'] %></h3>
   <ul id="talks">
   <% for(var ind in talks) { var talk = talks[ind]; %>
-    <li><%= talk.rc_timestamp.toString().split(' ')[4] %>&nbsp;&nbsp;<a href="/r/<%= lang %>/<%= talk.rc_page_id.toString(36) %>"><%= talk.rc_title %></a></li>
+    <li><%= talk.rc_timestamp.toString().split(' ')[4] %>&nbsp;&nbsp;<a href="/r/<%= variant%>/<%= talk.rc_page_id.toString(36) %>"><%= talk.rc_title %></a></li>
   <% } %>
   </ul>
   </div>

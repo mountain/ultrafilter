@@ -2,9 +2,9 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<%= lang %>" lang="<%= lang %>" dir="<%= dir %>">
 <head>
    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title><%= msg[lang]['shorturl'] %></title>
+    <title><%= msg[variant]['shorturl'] %></title>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js" type="text/javascript" charset="utf-8"></script>
-    <script type="text/javascript" charset="utf-8">var lang="<%= lang %>", host = "<%= baseUrl %>", notfound = "<%= msg[lang]['notfound'] %>";</script>
+    <script type="text/javascript" charset="utf-8">var lang ="<%= lang %>", variant ="<%= variant %>", host = "<%= baseUrl %>", notfound = "<%= msg[variant]['notfound'] %>";</script>
     <script src="/javascripts/application.js" type="text/javascript" charset="utf-8"></script>
     <link rel="stylesheet" href="/styles/style.css" type="text/css" media="screen" charset="utf-8" />
 </head>
@@ -14,12 +14,12 @@
       <% if(services.isSupported(l, 's')) { %><a href="/<%= l %>/s"><%= l %></a>&nbsp;<% } %>
     <% } %>
     ] </div>
-    <h2 id="title"><%= msg[lang]['shorturl'] %></h2>
-    <div id="querybox"><%= msg[lang]['lable'] %>&nbsp;
-    <input id="query" type=text value="<%= msg[lang]['wiki'] %>">
-    <input id="submit" type=submit value="<%= msg[lang]['shorten'] %>"></div>
+    <h2 id="title"><%= msg[variant]['shorturl'] %></h2>
+    <div id="querybox"><%= msg[variant]['lable'] %>&nbsp;
+    <input id="query" type=text value="<%= msg[variant]['wiki'] %>">
+    <input id="submit" type=submit value="<%= msg[variant]['shorten'] %>"></div>
     <div id="result"></div>
-    <p id="team"><%= msg[lang]['byfor'] %></p>
+    <p id="team"><%= msg[variant]['byfor'] %></p>
     <script type="text/javascript" charset="utf-8">$(s);</script>
 </body>
 </html>

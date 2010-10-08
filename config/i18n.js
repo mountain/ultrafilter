@@ -21,6 +21,7 @@ exports.i18n = {
       userdiscussions: 'Your discussions',
       supcategory: 'Supcategories',
       subcategory: 'Subcategores',
+      unknowncategory: 'Unknown category',
     },
     en: {
       byfor: 'by <a href="http://github.com/mountain/ultrafilter">Ultrafilter</a> for a better <a href="http://www.wikipedia.org/">Wikipedia</a> community',
@@ -41,6 +42,7 @@ exports.i18n = {
       userdiscussions: 'Your discussions',
       supcategory: 'Supcategories',
       subcategory: 'Subcategores',
+      unknowncategory: 'Unknown category',
     },
     he: {
       byfor: 'by <a href="http://github.com/mountain/ultrafilter">Ultrafilter</a> for a better <a href="http://www.wikipedia.org/">Wikipedia</a> community',
@@ -61,6 +63,7 @@ exports.i18n = {
       userdiscussions: 'Your discussions',
       supcategory: 'Supcategories',
       subcategory: 'Subcategores',
+      unknowncategory: 'Unknown category',
     },
     ml: {
       byfor: 'by <a href="http://github.com/mountain/ultrafilter">Ultrafilter</a> for a better <a href="http://www.wikipedia.org/">Wikipedia</a> community',
@@ -81,6 +84,7 @@ exports.i18n = {
       userdiscussions: 'Your discussions',
       supcategory: 'Supcategories',
       subcategory: 'Subcategores',
+      unknowncategory: 'Unknown category',
     },
     ru: {
       byfor: 'by <a href="http://github.com/mountain/ultrafilter">Ultrafilter</a> for a better <a href="http://www.wikipedia.org/">Wikipedia</a> community',
@@ -101,6 +105,7 @@ exports.i18n = {
       userdiscussions: 'Your discussions',
       supcategory: 'Supcategories',
       subcategory: 'Subcategores',
+      unknowncategory: 'Unknown category',
     },
     ta: {
       byfor: 'by <a href="http://github.com/mountain/ultrafilter">Ultrafilter</a> for a better <a href="http://www.wikipedia.org/">Wikipedia</a> community',
@@ -121,6 +126,7 @@ exports.i18n = {
       userdiscussions: 'Your discussions',
       supcategory: 'Supcategories',
       subcategory: 'Subcategores',
+      unknowncategory: 'Unknown category',
     },
     zh: {
       byfor: '为了更好的<a href="http://www.wikipedia.org/">维基</a>社群由<a href="http://github.com/mountain/ultrafilter">Ultrafilter</a>提供服务',
@@ -141,6 +147,7 @@ exports.i18n = {
       userdiscussions: '关注的讨论',
       supcategory: '父分类',
       subcategory: '子分类',
+      unknowncategory: '不详的分类',
     },
     'zh-cn': {
       byfor: '为了更好的<a href="http://www.wikipedia.org/">维基</a>社群由<a href="http://github.com/mountain/ultrafilter">Ultrafilter</a>提供服务',
@@ -161,6 +168,7 @@ exports.i18n = {
       userdiscussions: '关注的讨论',
       supcategory: '父分类',
       subcategory: '子分类',
+      unknowncategory: '不详的分类',
     },
     'zh-tw': {
       byfor: '为了更好的<a href="http://www.wikipedia.org/">维基</a>社群由<a href="http://github.com/mountain/ultrafilter">Ultrafilter</a>提供服务',
@@ -181,6 +189,7 @@ exports.i18n = {
       userdiscussions: '关注的讨论',
       supcategory: '父分类',
       subcategory: '子分类',
+      unknowncategory: '不详的分类',
     },
   }
 };

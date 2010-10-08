@@ -29,7 +29,7 @@ function rc() {
     var title = $("#query").val();
     if(title && title !== "") {
       var encoded = escape(utf8(title));
-      window.location = host + "/" + lang + "/rc/" + encoded;
+      window.location = host + "/" + variant + "/rc/" + encoded;
     };
   });
 }
@@ -44,7 +44,7 @@ function cc() {
     var html = "<h3>" + supcat + "</h3><ul>";
     for(var ind in data) {
       var cat = data[ind];
-      html += ("<li><a href='/" + lang + "/rc/" + escape(utf8(cat)) +"'>" + cat + "</a></li>");
+      html += ("<li><a href='/" + variant + "/rc/" + escape(utf8(cat)) +"'>" + cat + "</a></li>");
     }
     html += ("</ul>");
     $("#supcategory").html(html);
@@ -55,7 +55,7 @@ function cc() {
     var html = "<h3>" + subcat + "</h3><ul>";
     for(var ind in data) {
       var cat = data[ind];
-      html += ("<li><a href='/" + lang + "/rc/" + escape(utf8(cat)) +"'>" + cat + "</a></li>");
+      html += ("<li><a href='/" + variant + "/rc/" + escape(utf8(cat)) +"'>" + cat + "</a></li>");
     }
     html += ("</ul>");
     $("#subcategory").html(html);
@@ -68,7 +68,7 @@ function n() {
     var title = $("#query").val();
     if(title && title !== "") {
       var encoded = escape(utf8(title));
-      window.location = host + "/" + lang + "/n/" + encoded;
+      window.location = host + "/" + variant + "/n/" + encoded;
     };
   });
 }

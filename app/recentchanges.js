@@ -10,14 +10,16 @@ exports.app = function(env) {
       rc = env.templates['recentchanges'],
       unsupported = env.templates['unsupported'];
 
-  return function(req, res, lang) {
+  return function(req, res, variant) {
     var html = undefined;
-    var lang = lang || 'en';
-    if(_.indexOf(langs, lang) > -1) {
-      var dir = util.htmlDir(env, lang);
-      html = rc({lang: lang, baseUrl: baseUrl, msg: msg, dir: dir, langs: langs, services: services});
+    var lang = env.services.variants[variant] || variant;
+    lang = lang || 'en';
+
+    if(_.indexOf(langs, variant) > -1) {
+      var dir = util.htmlDir(env, variant);
+      html = rc({lang: lang, variant: variant, baseUrl: baseUrl, msg: msg, dir: dir, langs: langs, services: services});
     } else {
-      html = unsupported({lang: lang, msg: msg});
+      html = unsupported({lang: lang, variant: variant, msg: msg});
     }
     res.simpleHtml(200, html);
   };

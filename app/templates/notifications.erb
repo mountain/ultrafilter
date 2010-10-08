@@ -2,9 +2,9 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<%= lang %>" lang="<%= lang %>" dir="<%= dir %>">
 <head>
    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title><%= msg[lang]['recentchanges'] %></title>
+    <title><%= msg[variant]['recentchanges'] %></title>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js" type="text/javascript" charset="utf-8"></script>
-    <script type="text/javascript" charset="utf-8">var lang="<%= lang %>", host = "<%= baseUrl %>", notfound = "<%= msg[lang]['notfound'] %>";</script>
+    <script type="text/javascript" charset="utf-8">var lang="<%= lang %>", variant="<%= variant %>", host = "<%= baseUrl %>", notfound = "<%= msg[variant]['notfound'] %>";</script>
     <script src="/javascripts/application.js" type="text/javascript" charset="utf-8"></script>
     <link rel="stylesheet" href="/styles/style.css" type="text/css" media="screen" charset="utf-8" />
 </head>
@@ -14,11 +14,11 @@
       <% if(services.isSupported(l, 'n')) { %><a href="/<%= l %>/n"><%= l %></a>&nbsp;<% } %>
     <% } %>
     ] </div>
-    <h2 id="title"><%= msg[lang]['notifications'] %></h2>
-    <div id="querybox"><%= msg[lang]['user'] %>&nbsp;
+    <h2 id="title"><%= msg[variant]['notifications'] %></h2>
+    <div id="querybox"><%= msg[variant]['user'] %>&nbsp;
     <input id="query" type=text value="Jimbo">
-    <input id="submit" type=submit value="<%= msg[lang]['submit'] %>"></div>
-    <p id="team"><%= msg[lang]['byfor'] %></p>
+    <input id="submit" type=submit value="<%= msg[variant]['submit'] %>"></div>
+    <p id="team"><%= msg[variant]['byfor'] %></p>
     <script type="text/javascript" charset="utf-8">$(n);</script>
 </body>
 </html>

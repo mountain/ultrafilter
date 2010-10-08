@@ -11,13 +11,13 @@
       <a href="/<%= l %>"><%= l %></a>&nbsp;
     <% } %>
     ] </div>
-    <h2 id="title"><%= msg[lang]['services'] %></h2>
+    <h2 id="title"><%= msg[variant]['services'] %></h2>
     <ul id="services">
-    <% for(var ind in services.supported[lang]) { var s = services.supported[lang][ind], key = services.abbrs[s];%>
-      <li><a href="/<%= lang %>/<%= s %>"><%= msg[lang][key] %></a></li>
+    <% for(var ind in services.supported[variant]) { var s = services.supported[variant][ind], key = services.abbrs[s];%>
+      <li><a href="/<%= variant %>/<%= s %>"><%= msg[variant][key] %></a></li>
     <% } %>
     </ul>
-    <p id="team"><%= msg[lang]['byfor'] %></p>
+    <p id="team"><%= msg[variant]['byfor'] %></p>
 </body>
 </html>
 

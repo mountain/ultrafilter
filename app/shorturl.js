@@ -15,7 +15,7 @@ exports.app = function(env) {
     lang = lang || 'en';
     if(_.indexOf(langs, variant) > -1) {
       var dir = util.htmlDir(env, variant);
-      html = shorturl({baseUrl: baseUrl, variant: variant, msg: msg, dir: dir, langs: langs, services: services});
+      html = shorturl({baseUrl: baseUrl, lang: lang, variant: variant, msg: msg, dir: dir, langs: langs, services: services});
     } else {
       html = unsupported({variant: variant, msg: msg});
     }

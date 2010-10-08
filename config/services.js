@@ -4,10 +4,10 @@ exports.services = {
     rc: 'recentchanges',
     s: 'shorturl',
   },
-  langs: ['cs', 'en', 'he', 'ml', 'ru', 'ta', 'zh', 'zh-cn', 'zh-tw'],
+  langs: ['cs', 'en', 'he', 'ml', 'ru', 'ta', 'zh-hans', 'zh-hant'],
   variants: {
-    'zh-cn': 'zh',
-    'zh-tw': 'zh',
+    'zh-hans': 'zh',
+    'zh-hant': 'zh',
   },
   supported: {
     cs: ['s'],
@@ -17,8 +17,8 @@ exports.services = {
     ru: ['s'],
     ta: ['s'],
     zh: ['rc', 'n', 's'],
-    'zh-cn': ['rc', 'n', 's'],
-    'zh-tw': ['rc', 'n', 's'],
+    'zh-hans': ['rc', 'n', 's'],
+    'zh-hant': ['rc', 'n', 's'],
   },
   isSupported: function(lang, service) {
     var result = false;

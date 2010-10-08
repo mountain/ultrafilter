@@ -20,23 +20,28 @@ exports.app = function(env) {
 
   return function(req, res, variant, name) {
     name = utf8.decode(unescape(name));
-    var lang= env.services.variants[variant] || variant;
+    var lang= env.services.variants[variant] || variant,
+        cache = env.cache,
+        wikiConn = wikiConns[lang];
+
 
     //util.log("handle request for " + variant+ ":" + name);
-    wikiConn = wikiConns[lang];
-    wikiConn.queryFetch("select cat_id from category where cat_title = '" + name + "'",
+    util.cachedEntry(cache, 'catTitle2Id', name, wikiConn, "select cat_id from category where cat_title = '" + name + "'",
       function(rows) {
         if(rows.length === 0) {
           res.writeHead(404, {});
         } else {
           var catId = rows[0].cat_id;
-          wikiConn.queryFetch("select distinct(cat_to) from catgraph where cat_from = " + catId,
+          util.cachedEntry(cache, 'catId2Parents', catId, wikiConn, "select distinct(cat_to) from catgraph where cat_from = " + catId,
             function(parents) {
               var supcategories = [];
               _.each(parents, function(parent) {
-                wikiConn.queryFetchSync("select cat_title from category where cat_id = " + parent.cat_to,
+                var parentId = parent.cat_to;
+                util.cachedEntrySync(cache, 'catId2Title', parentId, wikiConn, "select cat_title from category where cat_id = " + parent.cat_to,
                   function(cats) {
-                    supcategories.push(cats[0].cat_title);
+                    if(cats.length > 0) {
+                      supcategories.push(cats[0].cat_title);
+                    }
                   }
                 );
               });

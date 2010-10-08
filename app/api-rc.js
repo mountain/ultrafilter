@@ -28,7 +28,9 @@ exports.app = function(env) {
 
   return function(req, res, variant, names, noop, time) {
     names = utf8.decode(unescape(names));
-    var lang= env.services.variants[variant] || variant;
+    var lang = env.services.variants[variant] || variant,
+        cache = env.cache,
+        wikiConn = wikiConns[lang];
 
     if(time) {
       time = new Date(parseInt(time));
@@ -37,8 +39,7 @@ exports.app = function(env) {
     }
 
     util.log("handle request for " + variant+ ":" + names + ":" + time);
-    wikiConn = wikiConns[lang];
-    wikiConn.queryFetch("select cat_id from category where cat_title = '" + names + "'",
+    util.cachedEntry(cache, 'catTitle2Id', names, wikiConn, "select cat_id from category where cat_title = '" + names + "'",
       function(rows) {
         if(rows.length === 0) {
           res.writeHead(404, {});
@@ -47,15 +48,15 @@ exports.app = function(env) {
           var rcConn = rcConns[lang];
           rcConn.queryFetch("select rc.rc_title, rc.rc_page_id, rc.rc_timestamp from filteredchanges as fc, recentchanges as rc where fc.fc_rc_id = rc.rc_id and fc.fc_cat_id = " + catId + " and rc.rc_timestamp > " + sqlTime(time) + " order by rc.rc_timestamp desc limit 100",
             function(changes) {
+              var rc = [];
               _.each(changes, function(change) {
-                  var rc = [];
                   rc.push({
                     title: change.rc_title,
                     pageId: change.rc_page_id,
                     timestamp: change.rc_timestamp,
                   });
-                 res.simpleJson(200, rc);
               });
+              res.simpleJson(200, rc);
             }
           );
         }

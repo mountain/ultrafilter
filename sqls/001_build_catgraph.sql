@@ -1,25 +1,9 @@
 --
--- Prepare Enviroments
---
-
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
-/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
-/*!40103 SET TIME_ZONE='+00:00' */;
-/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
-/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
-/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
-/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
-
---
 -- Table structure for table `catgraph`
 --
 
 DROP TABLE IF EXISTS `catgraph`;
 
-SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
 CREATE TABLE `catgraph` (
   `cat_from` int(11) DEFAULT NULL,
@@ -31,7 +15,6 @@ CREATE TABLE `catgraph` (
   KEY `cat_from_index` (`cat_from`),
   KEY `cat_to_index` (`cat_to`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1369527 DEFAULT CHARSET=binary;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Fill data into catgraph

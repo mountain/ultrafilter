@@ -21,7 +21,8 @@ exports.app = function(env) {
       langs = services.langs,
       msg = env.i18n.msg,
       unknown = env.templates['unknown'],
-      ud = env.templates['userdiscussions'];
+      ud = env.templates['userdiscussions'],
+      unsupported = env.templates['unsupported'];
 
   _.each(env.supported, function(lang) { setupConns(env, lang); } );
 
@@ -32,12 +33,17 @@ exports.app = function(env) {
     lang = lang || 'en';
     var dir = util2.htmlDir(env, variant);
 
-    util.log("handle request for " + variant + ":" + user);
-    rcConn = rcConns[lang];
-    rcConn.queryFetch("select ntf.ntf_talk_title, rc.rc_page_id, rc.rc_timestamp from notifications as ntf, recentchanges as rc where ntf.ntf_rc_id = rc.rc_id and ntf.ntf_user = '" + user + "'", function(rows) {
-        var html = ud({lang: lang, variant: variant, langs: langs, dir: dir, services: services, msg: msg, user: user, discussions: rows});
+    if(_.indexOf(langs, variant) === -1) {
+      html = unsupported({lang: lang, variant: variant, msg: msg});
       res.simpleHtml(200, html);
-    });
+    } else {
+      util.log("handle request for " + variant + ":" + user);
+      rcConn = rcConns[lang];
+      rcConn.queryFetch("select ntf.ntf_talk_title, rc.rc_page_id, rc.rc_timestamp from notifications as ntf, recentchanges as rc where ntf.ntf_rc_id = rc.rc_id and ntf.ntf_user = '" + user + "'", function(rows) {
+          var html = ud({lang: lang, variant: variant, langs: langs, dir: dir, services: services, msg: msg, user: user, discussions: rows});
+        res.simpleHtml(200, html);
+      });
+    }
   };
 };
 

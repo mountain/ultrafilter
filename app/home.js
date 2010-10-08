@@ -6,7 +6,8 @@ exports.app = function(env) {
   var services = env.services,
       langs = services.langs,
       msg = env.i18n.msg,
-      home = env.templates['home'];
+      home = env.templates['home'],
+      unsupported = env.templates['unsupported'];
 
   return function(req, res, variant) {
     var html = undefined;

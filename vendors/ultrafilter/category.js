@@ -50,15 +50,15 @@ exports.categories = function(env, pageId) {
     });
   }
 
-  var len3 = cats.length;
-  for(var i=len2;i<len3;i++) {
-    parents = get(env, cats[i]);
-    _.each(parents, function(parent) {
-      if(_.indexOf(cats, parent) === -1) {
-        cats.push(parent);
-      }
-    });
-  }
+//  var len3 = cats.length;
+//  for(var i=len2;i<len3;i++) {
+//    parents = get(env, cats[i]);
+//    _.each(parents, function(parent) {
+//      if(_.indexOf(cats, parent) === -1) {
+//        cats.push(parent);
+//      }
+//    });
+//  }
 
   return cats;
 }

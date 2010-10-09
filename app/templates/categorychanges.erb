@@ -21,7 +21,7 @@
   <h4><%= first[0] + " " + first[1] + " " + first[2] %></h4>
   <ul id="changes<%= group %>">
   <% for(var ind in changes) { var change = changes[ind], seg = change.rc_timestamp.toString().split(' '), last; %>
-    <% var closeOpen = last && last[0]!==seg[0] && last[1]!==seg[1] && last[2]!==seg[2]; %>
+    <% var closeOpen = last && (last[0]!==seg[0] || last[1]!==seg[1] || last[2]!==seg[2]); %>
     <% if(closeOpen) { %> </ul><h4><%= seg[0] + " " + seg[1] + " " + seg[2] %></h4> <ul id="changes<%= group %>"> <% } %>
     <li><%= seg[4] %>&nbsp;&nbsp;<a href="/r/<%= variant%>/<%= change.rc_page_id.toString(36) %>"><%= change.rc_title %></a></li>
     <% if(closeOpen) { group++; } %>
@@ -37,7 +37,7 @@
   <h4><%= first[0] + " " + first[1] + " " + first[2] %></h4>
   <ul id="talks<%= group %>">
   <% for(var ind in talks) { var talk = talks[ind], seg = talk.rc_timestamp.toString().split(' '), last; %>
-    <% var closeOpen = last && last[0]!==seg[0] && last[1]!==seg[1] && last[2]!==seg[2]; %>
+    <% var closeOpen = last && (last[0]!==seg[0] || last[1]!==seg[1] || last[2]!==seg[2]); %>
     <% if(closeOpen) { %> </ul><h4><%= seg[0] + " " + seg[1] + " " + seg[2] %></h4> <ul id="talks<%= group %>"> <% } %>
     <li><%= seg[4] %>&nbsp;&nbsp;<a href="/r/<%= variant%>/<%= talk.rc_page_id.toString(36) %>"><%= talk.rc_title %></a></li>
     <% if(closeOpen) { group++; } %>

@@ -28,6 +28,7 @@ exports.app = function(env) {
 
   return function(req, res, variant, names, noop, time) {
     names = utf8.decode(unescape(names));
+    names = names.split('|');
     var lang = env.services.variants[variant] || variant,
         cache = env.cache,
         wikiConn = wikiConns[lang];
@@ -38,23 +39,38 @@ exports.app = function(env) {
       time = new Date(new Date().getTime() - 30*24*60*60*1000);
     }
 
+    var where = "", last = names.length - 1;
+    _.each(names, function(name, ind) {
+        var subclause = "cat_title = '" + name + "'";
+        where += (ind===last?subclause:(subclause + ' or '));
+    });
+
     util.log("handle request for " + variant+ ":" + names + ":" + time);
-    util.cachedEntry(cache, 'catTitle2Id', names, wikiConn, "select cat_id from category where cat_title = '" + names + "'",
-      function(rows) {
-        if(rows.length === 0) {
+    util.cachedEntry(cache, 'catTitle2Id', names.join('|'), wikiConn, "select cat_id from category where " + where,
+      function(catIds) {
+        if(catIds.length === 0) {
           res.writeHead(404, {});
         } else {
-          var catId = rows[0].cat_id;
+          var where = "", last = catIds.length - 1;
+          _.each(catIds, function(catId, ind) {
+              var subclause = "fc.fc_cat_id = " + catId.cat_id;
+              where += (ind===last?subclause:(subclause + ' or '));
+          });
+
           var rcConn = rcConns[lang];
-          rcConn.queryFetch("select rc.rc_title, rc.rc_page_id, rc.rc_timestamp from filteredchanges as fc, recentchanges as rc where fc.fc_rc_id = rc.rc_id and fc.fc_cat_id = " + catId + " and rc.rc_timestamp > " + sqlTime(time) + " order by rc.rc_timestamp desc limit 100",
+          rcConn.queryFetch("select rc.rc_title, rc.rc_page_id, rc.rc_timestamp from filteredchanges as fc, recentchanges as rc where fc.fc_rc_id = rc.rc_id and " + where + " and rc.rc_timestamp > " + sqlTime(time) + " order by rc.rc_timestamp desc limit 100",
             function(changes) {
-              var rc = [];
+              var rc = [], rcKeys = [];
               _.each(changes, function(change) {
-                  rc.push({
-                    title: change.rc_title,
-                    pageId: change.rc_page_id,
-                    timestamp: change.rc_timestamp,
-                  });
+                  var key = change.rc_page_id + ":" + change.rc_timestamp;
+                  if(_.indexOf(rcKeys, key) === -1) {
+                    rc.push({
+                      title: change.rc_title,
+                      pageId: change.rc_page_id,
+                      timestamp: change.rc_timestamp,
+                    });
+                    rcKeys.push(key);
+                  }
               });
               res.simpleJson(200, rc);
             }

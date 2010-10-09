@@ -39,7 +39,7 @@ exports.app = function(env) {
     } else {
       util.log("handle request for " + variant + ":" + user);
       rcConn = rcConns[lang];
-      rcConn.queryFetch("select ntf.ntf_talk_title, rc.rc_page_id, rc.rc_timestamp from notifications as ntf, recentchanges as rc where ntf.ntf_rc_id = rc.rc_id and ntf.ntf_user = '" + user + "'", function(rows) {
+      rcConn.queryFetch("select ntf.ntf_talk_title, rc.rc_page_id, rc.rc_timestamp from notifications as ntf, recentchanges as rc where ntf.ntf_rc_id = rc.rc_id and ntf.ntf_user = '" + user + "' order by rc.rc_timestamp desc limit 100", function(rows) {
           var html = ud({lang: lang, variant: variant, langs: langs, dir: dir, services: services, msg: msg, user: user, discussions: rows});
         res.simpleHtml(200, html);
       });

@@ -200,6 +200,10 @@ exports.getServer = function getServer(logger) {
       simpleResponse(code, JSON.stringify(json), "application/json", extra_headers);
     };
 
+    res.simpleJsonp = function (code, json, callbackName, extra_headers) {
+      simpleResponse(code, callbackName + "(" + JSON.stringify(json) + ")", "application/javascript; charset=UTF-8", extra_headers);
+    };
+
     res.notFound = function (message) {
       notFound(req, res, message);
     };

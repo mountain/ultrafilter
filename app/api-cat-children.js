@@ -24,6 +24,9 @@ exports.app = function(env) {
         cache = env.cache,
         wikiConn = wikiConns[lang];
 
+    var query = require('url').parse(req.url, true).query,
+    jsonp = query?query.callback:undefined;
+
     //util.log("handle request for " + variant+ ":" + name);
     util.cachedEntry(cache, 'catTitle2Id', name, wikiConn, "select cat_id from category where cat_title = '" + name + "'",
       function(rows) {
@@ -44,7 +47,10 @@ exports.app = function(env) {
                   }
                 );
               });
-              res.simpleJson(200, subcategories);
+              if(jsonp)
+                res.simpleJsonp(200, subcategories, jsonp);
+              else
+                res.simpleJson(200, subcategories);
             }
           );
         }

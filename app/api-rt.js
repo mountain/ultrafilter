@@ -39,6 +39,9 @@ exports.app = function(env) {
       time = new Date(new Date().getTime() - 30*24*60*60*1000);
     }
 
+    var query = require('url').parse(req.url, true).query,
+    jsonp = query?query.callback:undefined;
+
     var where = "(", last = names.length - 1;
     _.each(names, function(name, ind) {
         var subclause = "cat_title = '" + name + "'";
@@ -74,7 +77,10 @@ exports.app = function(env) {
                     rcKeys.push(key);
                   }
               });
-              res.simpleJson(200, rc);
+              if(jsonp)
+                res.simpleJsonp(200, rc, jsonp);
+              else
+                res.simpleJson(200, rc);
             }
           );
         }

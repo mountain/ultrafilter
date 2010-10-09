@@ -25,7 +25,7 @@ exports.app = function(env) {
         wikiConn = wikiConns[lang];
 
     var query = require('url').parse(req.url, true).query,
-    jsonp = query?query.callback:undefined;
+    jsonp = query?(query.callback || query.jsonp):undefined;
 
     //util.log("handle request for " + variant+ ":" + name);
     util.cachedEntry(cache, 'catTitle2Id', name, wikiConn, "select cat_id from category where cat_title = '" + name + "'",

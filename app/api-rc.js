@@ -40,7 +40,7 @@ exports.app = function(env) {
     }
 
     var query = require('url').parse(req.url, true).query,
-    jsonp = query?query.callback:undefined;
+    jsonp = query?(query.callback || query.jsonp):undefined;
 
     var where = "(", last = names.length - 1;
     _.each(names, function(name, ind) {

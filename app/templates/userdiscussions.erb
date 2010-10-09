@@ -12,11 +12,19 @@
   ] </div>
   <h2 id="title"><%= msg[variant]['userdiscussions'] %> : <%= user %></h2>
   <div id="userdiscussions">
-  <ul id="discussions">
-  <% for(var ind in discussions) { var discuss = discussions[ind]; %>
-    <li><%= discuss.rc_timestamp.toString().split(' ')[4] %>&nbsp;&nbsp;<a href="/r/<%= variant%>/<%= discuss.rc_page_id.toString(36) %>"><%= discuss.ntf_talk_title %></a></li>
+  <% if(discussions.length > 0) { %>
+  <% var group = 0, first = discussions[0].rc_timestamp.toString().split(' '); %>
+  <h4><%= first[0] + " " + first[1] + " " + first[2] %></h4>
+  <ul id="discussions<%= group %>">
+  <% for(var ind in discussions) { var discuss = discussions[ind], seg = discuss.rc_timestamp.toString().split(' '), last; %>
+    <% var closeOpen = last && last[0]!==seg[0] && last[1]!==seg[1] && last[2]!==seg[2]; %>
+    <% if(closeOpen) { %> </ul><h4><%= seg[0] + " " + seg[1] + " " + seg[2] %></h4> <% } %>
+    <li><%= seg[4] %>&nbsp;&nbsp;<a href="/r/<%= variant%>/<%= discuss.rc_page_id.toString(36) %>"><%= discuss.ntf_talk_title %></a></li>
+    <% if(closeOpen) { %> <ul id="discussions<%= group %>"> <% group++; } %>
+    <% last = seg; %>
   <% } %>
   </ul>
+  <% } %>
   </div>
  </body>
 </html>

@@ -3,10 +3,10 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title><%= msg[variant]['recentchanges'] %> : <%= category %></title>
+    <link rel="stylesheet" href="/styles/style.css" type="text/css" media="screen" charset="utf-8" />
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js" type="text/javascript" charset="utf-8"></script>
     <script type="text/javascript" charset="utf-8">var lang="<%= lang %>", variant="<%= variant %>", host = "<%= baseUrl %>", category = "<%= category %>", subcat = "<%= subcat %>", supcat = "<%= supcat %>", notfound = "<%= msg[variant]['notfound'] %>";</script>
     <script src="/javascripts/application.js" type="text/javascript" charset="utf-8"></script>
-    <link rel="stylesheet" href="/styles/style.css" type="text/css" media="screen" charset="utf-8" />
   <body>
   <div id="langs"> [&nbsp;
   <% for(var ind in langs) { var l = langs[ind]; %>
@@ -16,19 +16,35 @@
   <h2 id="title"><%= msg[variant]['recentchanges'] %> : <%= category %></h2>
   <div id="recentchanges">
   <h3><%= msg[variant]['recentchanges'] %></h3>
-  <ul id="changes">
-  <% for(var ind in changes) { var change = changes[ind]; %>
-    <li><%= change.rc_timestamp.toString().split(' ')[4] %>&nbsp;&nbsp;<a href="/r/<%= variant%>/<%= change.rc_page_id.toString(36) %>"><%= change.rc_title %></a></li>
+  <% if(changes.length > 0) { %>
+  <% var group = 0, first = changes[0].rc_timestamp.toString().split(' '); %>
+  <h4><%= first[0] + " " + first[1] + " " + first[2] %></h4>
+  <ul id="changes<%= group %>">
+  <% for(var ind in changes) { var change = changes[ind], seg = change.rc_timestamp.toString().split(' '), last; %>
+    <% var closeOpen = last && last[0]!==seg[0] && last[1]!==seg[1] && last[2]!==seg[2]; %>
+    <% if(closeOpen) { %> </ul><h4><%= seg[0] + " " + seg[1] + " " + seg[2] %></h4> <% } %>
+    <li><%= seg[4] %>&nbsp;&nbsp;<a href="/r/<%= variant%>/<%= change.rc_page_id.toString(36) %>"><%= change.rc_title %></a></li>
+    <% if(closeOpen) { %> <ul id="changes<%= group %>"> <% group++; } %>
+    <% last = seg; %>
   <% } %>
   </ul>
+  <% } %>
   </div>
   <div id="recenttalks">
   <h3><%= msg[variant]['recenttalks'] %></h3>
-  <ul id="talks">
-  <% for(var ind in talks) { var talk = talks[ind]; %>
-    <li><%= talk.rc_timestamp.toString().split(' ')[4] %>&nbsp;&nbsp;<a href="/r/<%= variant%>/<%= talk.rc_page_id.toString(36) %>"><%= talk.rc_title %></a></li>
+  <% if(talks.length > 0) { %>
+  <% var group = 0, first = talks[0].rc_timestamp.toString().split(' '); %>
+  <h4><%= first[0] + " " + first[1] + " " + first[2] %></h4>
+  <ul id="talks<%= group %>">
+  <% for(var ind in talks) { var talk = talks[ind], seg = talk.rc_timestamp.toString().split(' '), last; %>
+    <% var closeOpen = last && last[0]!==seg[0] && last[1]!==seg[1] && last[2]!==seg[2]; %>
+    <% if(closeOpen) { %> </ul><h4><%= seg[0] + " " + seg[1] + " " + seg[2] %></h4> <% } %>
+    <li><%= seg[4] %>&nbsp;&nbsp;<a href="/r/<%= variant%>/<%= talk.rc_page_id.toString(36) %>"><%= talk.rc_title %></a></li>
+    <% if(closeOpen) { %> <ul id="talks<%= group %>"> <% group++; } %>
+    <% last = seg; %>
   <% } %>
   </ul>
+  <% } %>
   </div>
   <div id="supcategory"></div>
   <div id="subcategory"></div>

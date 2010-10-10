@@ -42,21 +42,20 @@ exports.cachedEntrySync = function(cache, prefix, key, conn, sql, callback) {
 exports.refUser = function(referer, lang, variant) {
   var user = undefined,
       url = referer?require('url').parse(referer):undefined,
-      source = 'http://' + lang + ".wikipedia.org";
+      source = lang + ".wikipedia.org";
   variant = variant || lang;
-  if(url && url.href.substring(0, source.length) === source) {
-    var path = ulr.pathname.split('/');
-    if(path.length === 3 && (path[0] === 'wiki' || path[0] === variant) &&
-      path[1].substring(0, 4) === 'User:' && path[2] === 'Ultrafilter') {
-      user = path[1].substring(4);
+  if(url && url.hostname === source) {
+    var path = url.pathname.split('/');
+    if(path.length >= 3 && (path[1] === 'wiki' || path[1] === variant) &&
+      path[2].substring(0, 5) === 'User:' && path[3] === 'Ultrafilter') {
+      user = path[2].substring(5);
     }
   }
   return user;
 }
 
-
 exports.markAccess = function(rcConn, user, type) {
-  if(!user) return;
+  if(!user || !type) return;
   rcConn.query("insert into access(ac_user, ac_type, ac_timestamp) values('" + user + "', '" + type +"', current_timestamp) on duplicate key update ac_timestamp=current_timestamp;");
 }
 

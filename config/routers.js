@@ -7,7 +7,7 @@ exports.routers = {
   categorychanges: new RegExp("^/([a-z-]+)/rc/(([0-9a-zA-Z]|%[0-9a-fA-F]{2})+)$"),
   notifications: new RegExp("^/([a-z-]+)/n$"),
   userdiscussions: new RegExp("^/([a-z-]+)/n/(.*)$"),
-  'api-alt': new RegExp("^/api/alt/([a-z]+)/(([0-9a-zA-Z]|%[0-9a-fA-F]{2})+)/([0-9]+)$"),
+  'api-alt': new RegExp("^/api/alt/([a-z]+)/(([0-9a-zA-Z]|%[0-9a-fA-F]{2})+)/(([0-9a-zA-Z]|%[0-9a-fA-F]{2})+)$"),
   'api-rc': new RegExp("^/api/rc/([a-z]+)/(([0-9a-zA-Z]|%[0-9a-fA-F]{2})+)/([0-9]+)$"),
   'api-rt': new RegExp("^/api/rt/([a-z]+)/(([0-9a-zA-Z]|%[0-9a-fA-F]{2})+)/([0-9]+)$"),
   'api-ntf': new RegExp("^/api/ntf/([a-z]+)/(([0-9a-zA-Z]|%[0-9a-fA-F]{2})+)/([0-9]+)$"),

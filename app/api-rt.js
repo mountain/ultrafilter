@@ -88,7 +88,7 @@ exports.app = function(env) {
     );
 
     var referer = req.headers.referer;
-    util.markAccess(rcConn, util.refUser(referer), 'rt');
+    util.markAccess(rcConn, util.refUser(referer, lang, variant), 'rt');
   };
 };
 

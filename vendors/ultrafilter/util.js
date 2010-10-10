@@ -39,12 +39,12 @@ exports.cachedEntrySync = function(cache, prefix, key, conn, sql, callback) {
   }
 }
 
-exports.refUser = function(referer, lang, varaint) {
+exports.refUser = function(referer, lang, variant) {
   var user = undefined,
-      url = require('url').parse(referer),
+      url = referer?require('url').parse(referer):undefined,
       source = 'http://' + lang + ".wikipedia.org";
   variant = variant || lang;
-  if(url.href.substring(0, source.length) === source) {
+  if(url && url.href.substring(0, source.length) === source) {
     var path = ulr.pathname.split('/');
     if(path.length === 3 && (path[0] === 'wiki' || path[0] === variant) &&
       path[1].substring(0, 4) === 'User:' && path[2] === 'Ultrafilter') {

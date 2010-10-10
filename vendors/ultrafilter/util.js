@@ -39,3 +39,24 @@ exports.cachedEntrySync = function(cache, prefix, key, conn, sql, callback) {
   }
 }
 
+exports.refUser = function(referer, lang, varaint) {
+  var user = undefined,
+      url = require('url').parse(referer),
+      source = 'http://' + lang + ".wikipedia.org";
+  variant = variant || lang;
+  if(url.href.substring(0, source.length) === source) {
+    var path = ulr.pathname.split('/');
+    if(path.length === 3 && (path[0] === 'wiki' || path[0] === variant) &&
+      path[1].substring(0, 4) === 'User:' && path[2] === 'Ultrafilter') {
+      user = path[1].substring(4);
+    }
+  }
+  return user;
+}
+
+
+exports.markAccess = function(rcConn, user, type) {
+  if(!user) return;
+  rcConn.query("insert into access(ac_user, ac_type, ac_timestamp) values('" + user + "', '" + type +"', current_timestamp) on duplicate key update ac_timestamp=current_timestamp;");
+}
+

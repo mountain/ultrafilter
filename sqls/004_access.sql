@@ -8,5 +8,6 @@ CREATE TABLE `access` (
   `ac_timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   KEY `ac_user_index` (`ac_user`),
   KEY `ac_type_index` (`ac_type`),
-  KEY `ac_timestamp_index` (`ac_timestamp`)
+  KEY `ac_timestamp_index` (`ac_timestamp`),
+  CONSTRAINT UNIQUE KEY `ac_user_type_index` (`ac_user`, `ac_type`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

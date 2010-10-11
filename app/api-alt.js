@@ -24,9 +24,9 @@ function sqlTime(time) {
 
 function fetchAllAlerts(env, res, lang, user, cats, record, jsonp) {
   var rcConn = rcConns[lang];
-  rcConn.queryFetch("select count(rc_id) as cnt from notifications, recentchanges where ntf_rc_id = rc_id and ntf_user = '" + user + "'",
+  rcConn.queryFetch("select count(rc_id) as cnt from notifications, recentchanges where ntf_rc_id = rc_id and unix_timestamp(rc_timestamp) > '" + record.ntf + "' and ntf_user = '" + user + "'",
     function(rows) {
-      if(rows.lenght > 0) {
+      if(rows.length > 0) {
         record.ntf = rows[0].cnt;
       } else {
         record.ntf = -1;
@@ -51,7 +51,7 @@ function fetchRcRtAlerts(env, res, lang, user, cats, record, jsonp) {
 
   util.cachedEntry(cache, 'catTitle2Id', cats.join('|'), wikiConn, "select cat_id from category where " + where,
     function(catIds) {
-      sys.puts("catIds: " + catIds);
+      //sys.puts("catIds: " + sys.inspect(catIds));
       if(catIds.length > 0) {
         var where = "(", last = catIds.length - 1;
         _.each(catIds, function(catId, ind) {
@@ -60,18 +60,18 @@ function fetchRcRtAlerts(env, res, lang, user, cats, record, jsonp) {
         });
         where += ")";
 
-        rcConn.queryFetch("select count(fc.fc_id) as cnt from filteredchanges as fc, recentchanges as rc where fc.fc_rc_id = rc.rc_id and rc.rc_ns = 0 and " + where + " and rc.rc_timestamp > '" + record.rc + "'",
+        rcConn.queryFetch("select count(fc.fc_id) as cnt from filteredchanges as fc, recentchanges as rc where fc.fc_rc_id = rc.rc_id and rc.rc_ns = 0 and " + where + " and unix_timestamp(rc.rc_timestamp) > " + record.rc,
           function(rows) {
-            sys.puts("rows: " + rows);
-            if(rows.lenght > 0) {
+            //sys.puts("rows: " + sys.inspect(rows));
+            if(rows.length > 0) {
               record.rc = rows[0].cnt;
             } else {
               record.rc = -1;
             }
-            rcConn.queryFetch("select count(fc.fc_id) as cnt from filteredchanges as fc, recentchanges as rc where fc.fc_rc_id = rc.rc_id and rc.rc_ns = 1 and " + where + " and rc.rc_timestamp > '" + record.rt + "'",
+            rcConn.queryFetch("select count(fc.fc_id) as cnt from filteredchanges as fc, recentchanges as rc where fc.fc_rc_id = rc.rc_id and rc.rc_ns = 1 and " + where + " and unix_timestamp(rc.rc_timestamp) > " + record.rt,
               function(rows) {
-                sys.puts("rows: " + rows);
-                if(rows.lenght > 0) {
+                //sys.puts("rows: " + sys.inspect(rows));
+                if(rows.length > 0) {
                   record.rt = rows[0].cnt;
                 } else {
                   record.rt = -1;
@@ -103,7 +103,7 @@ exports.app = function(env) {
     var query = require('url').parse(req.url, true).query,
     jsonp = query?(query.callback || query.jsonp):undefined;
 
-    rcConn.queryFetch("select ac_type, ac_timestamp from access where ac_user = '" + user + "'",
+    rcConn.queryFetch("select ac_type, unix_timestamp(ac_timestamp) from access where ac_user = '" + user + "'",
       function(accesses) {
         var record = {};
         _.each(accesses, function(access) {

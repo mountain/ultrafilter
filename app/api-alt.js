@@ -103,7 +103,7 @@ exports.app = function(env) {
     var query = require('url').parse(req.url, true).query,
     jsonp = query?(query.callback || query.jsonp):undefined;
 
-    rcConn.queryFetch("select ac_type, unix_timestamp(ac_timestamp) from access where ac_user = '" + user + "'",
+    rcConn.queryFetch("select ac_type, unix_timestamp(ac_timestamp) as ac_timestamp from access where ac_user = '" + user + "'",
       function(accesses) {
         var record = {};
         _.each(accesses, function(access) {

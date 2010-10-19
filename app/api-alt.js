@@ -3,7 +3,7 @@ require('../lib/underscore');
 var sys = require('sys');
 
 var utf8  = require('../lib/utf8');
-var sql   = require("../vendors/ultrafilter/sql"),
+var sql   = require('../vendors/ultrafilter/sql'),
     util  = require('../vendors/ultrafilter/util'),
     util2 = require('../vendors/minimal/util');
 
@@ -49,7 +49,7 @@ function fetchRcRtAlerts(env, res, lang, user, cats, record, jsonp) {
   });
   where += ")";
 
-  util.cachedEntry(cache, 'catTitle2Id', cats.join('|'), wikiConn, "select cat_id from category where " + where,
+  util.cachedDbEntry(cache, 'catTitle2Id', cats.join('|'), wikiConn, "select cat_id from category where " + where,
     function(catIds) {
       //sys.puts("catIds: " + sys.inspect(catIds));
       if(catIds.length > 0) {

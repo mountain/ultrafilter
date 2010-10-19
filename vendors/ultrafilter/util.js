@@ -2,16 +2,18 @@ require('../../lib/underscore');
 
 var sys = require('sys');
 
+var cc = require('../../lib/cache');
+
 exports.log = function() {
-    sys.print((new Date()).toUTCString() + " - ");
-    sys.puts(_.toArray(arguments).join(" "));
+    sys.print((new Date()).toUTCString() + ' - ');
+    sys.puts(_.toArray(arguments).join('\t'));
 };
 
 exports.throwerr = function(err) {
   if(err) throw err;
-};
+}
 
-exports.cachedEntry = function(cache, prefix, key, conn, sql, callback) {
+exports.cachedDbEntry = function(cache, prefix, key, conn, sql, callback) {
   var id = prefix + ":" + key;
   var entry = cache.getItem(id);
   if(entry) {
@@ -25,7 +27,7 @@ exports.cachedEntry = function(cache, prefix, key, conn, sql, callback) {
   }
 }
 
-exports.cachedEntrySync = function(cache, prefix, key, conn, sql, callback) {
+exports.cachedDbEntrySync = function(cache, prefix, key, conn, sql, callback) {
   var id = prefix + ":" + key;
   var entry = cache.getItem(id);
   if(entry) {

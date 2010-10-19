@@ -51,7 +51,7 @@ exports.app = function(env) {
     where += ")";
 
     util.log("handle request for " + variant+ ":" + names + ":" + time);
-    util.cachedEntry(cache, 'catTitle2Id', names.join('|'), wikiConn, "select cat_id from category where " + where,
+    util.cachedDbEntry(cache, 'catTitle2Id', names.join('|'), wikiConn, "select cat_id from category where " + where,
       function(catIds) {
         if(catIds.length === 0) {
           res.writeHead(404, {});

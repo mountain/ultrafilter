@@ -44,7 +44,7 @@ exports.app = function(env) {
       res.simpleHtml(200, html);
     } else {
       //util.log("handle request for " + variant+ ":" + name);
-      util.cachedEntry(cache, 'catTitle2Id', name, wikiConn, "select cat_id from category where cat_title = '" + name + "'", function(rows) {
+      util.cachedDbEntry(cache, 'catTitle2Id', name, wikiConn, "select cat_id from category where cat_title = '" + name + "'", function(rows) {
 
         if(rows.length === 0) {
           var html = unknown({lang: lang, variant: variant, msg: msg});

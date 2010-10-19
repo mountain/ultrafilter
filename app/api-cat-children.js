@@ -28,18 +28,18 @@ exports.app = function(env) {
     jsonp = query?(query.callback || query.jsonp):undefined;
 
     //util.log("handle request for " + variant+ ":" + name);
-    util.cachedEntry(cache, 'catTitle2Id', name, wikiConn, "select cat_id from category where cat_title = '" + name + "'",
+    util.cachedDbEntry(cache, 'catTitle2Id', name, wikiConn, "select cat_id from category where cat_title = '" + name + "'",
       function(rows) {
         if(rows.length === 0) {
           res.writeHead(404, {});
         } else {
           var catId = rows[0].cat_id;
-          util.cachedEntry(cache, 'catId2Children', catId, wikiConn, "select distinct(cat_from) from catgraph where cat_to = " + catId,
+          util.cachedDbEntry(cache, 'catId2Children', catId, wikiConn, "select distinct(cat_from) from catgraph where cat_to = " + catId,
             function(children) {
               var subcategories = [];
               _.each(children, function(child) {
                 var childId = child.cat_from;
-                util.cachedEntrySync(cache, 'catId2Title', childId, wikiConn, "select cat_title from category where cat_id = " + childId,
+                util.cachedDbEntrySync(cache, 'catId2Title', childId, wikiConn, "select cat_title from category where cat_id = " + childId,
                   function(cats) {
                     if(cats.length > 0) {
                       subcategories.push(cats[0].cat_title);

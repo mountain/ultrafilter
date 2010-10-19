@@ -1,0 +1,5 @@
+exports.settings = {
+    host: "localhost",
+    port: 8080,
+    admin: ADMIN-EMAIL,
+};

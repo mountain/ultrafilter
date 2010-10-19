@@ -1,0 +1,6 @@
+//For multiple protocols and connections
+exports.settings = {
+    index: [ 'zh-rc', 'zh-wiki', ]
+    'zh-rc': 'mysql://YOURHOST:YOURPORT/YOURDB?user=YOURUSER&password=YOURPASSWORD',
+    'zh-wiki': 'mysql://YOURHOST:YOURPORT/YOURDB?user=YOURUSER&password=YOURPASSWORD',
+};

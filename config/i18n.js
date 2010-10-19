@@ -1,4 +1,4 @@
-exports.i18n = {
+exports.settings = {
   supported: ['cs', 'en', 'he', 'ml', 'ru', 'ta', 'zh'],
   rtl: ['he'],
   msg: {

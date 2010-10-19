@@ -3,26 +3,17 @@ require('../lib/underscore');
 var sys = require('sys');
 
 var utf8  = require('../lib/utf8');
-var sql   = require("../vendors/ultrafilter/sql"),
+var sql   = require("../vendors/minimal/sql"),
     util  = require('../vendors/ultrafilter/util'),
     html = require('../vendors/minimal/html');
 
-var wikiConns = {};
-
-function setupConns(env, lang) {
-  util.log("setup wikidb connections for " + lang);
-  wikiConns[lang] = sql.connect(env['db-host'], env['db-user'], env['db-pwd'], env.rc[lang].db.wiki);
-}
-
 exports.app = function(env) {
-
-  _.each(env.supported, function(lang) { setupConns(env, lang); } );
 
   return function(req, res, variant, name) {
     name = utf8.decode(unescape(name));
     var lang = env.services.variants[variant] || variant,
         cache = env.cache,
-        wikiConn = wikiConns[lang];
+        wikiConn = env.conns[lang + '-wiki'];
 
     var query = require('url').parse(req.url, true).query,
     jsonp = query?(query.callback || query.jsonp):undefined;

@@ -4,7 +4,7 @@ var sys = require('sys');
 
 var utf8 = require('../../lib/utf8');
 var cat  = require("./category"),
-    sql  = require("./sql"),
+    sql  = require("../minimal/sql"),
     util = require('./util');
 
 var env = {

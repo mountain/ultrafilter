@@ -4,25 +4,33 @@ var sys    = require('sys'),
     Step   = require('../../lib/step'),
     router = require('./node-router');
 
-var env = {};
+exports.start = function(path) {
+    var env = { path: path };
 
-exports.start = function() {
-
-  Step(
-      function() { require('./config').load(env); },
-      function() { require('./template').load(env); },
+    Step(
       function() {
-          var server = router.getServer(env.logger);
+          require('./config').load(this, env);
+      },
+      function() {
+          require('./template').load(this, env);
+      },
+      function(err) {
+          if(err) throw err;
+          require('./db').init(this, env);
+      },
+      function(err) {
+          if(err) throw err;
+          var server = router.getServer(logger.info);
 
-          _(routers).chain().keys().each(function(key) {
-              server.get(routers[key], require('../../app/' + key).app(env));
+          _(env.routers).chain().keys().each(function(key) {
+              server.get(env.routers[key], require('../../app/' + key).app(env));
           });
 
           server.get(new RegExp("^/(.+)$"), router.staticDirHandler(env.cache, env.path + 'public'));
 
-          server.listen(env.port, env.host);
+          server.listen(env.server.port, env.server.host);
       }
-  );
+    );
 
 }
 

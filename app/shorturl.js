@@ -5,7 +5,7 @@ exports.app = function(env) {
   var services = env.services,
       langs = services.langs,
       msg = env.i18n.msg,
-      baseUrl = env.baseUrl(),
+      baseUrl = env.server.baseUrl(),
       shorturl = env.templates['shorturl'],
       unsupported = env.templates['unsupported'];
 

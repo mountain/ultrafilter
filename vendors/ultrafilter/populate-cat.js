@@ -4,14 +4,8 @@ var sys = require('sys');
 
 var utf8 = require('../../lib/utf8');
 var cat  = require("./category"),
-    sql  = require("./sql"),
+    sql  = require("../minimal/sql"),
     util = require('./util');
-
-var env = {
-  rc: require('../../config/rc').rc,
-  cacheSize: 10000,
-  cache: new (require('../../lib/cache').Cache)(this.cacheSize),
-};
 
 function insertFc(env, rcId, pageId) {
   env.rcConn.querySync("select fc_rc_id from filteredchanges where fc_rc_id = " + rcId,

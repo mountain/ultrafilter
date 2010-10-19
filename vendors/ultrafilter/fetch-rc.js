@@ -1,13 +1,10 @@
 require('../../lib/underscore');
+require('../../lib/log');
 
-var sys = require('sys');
-
-var sql  = require('./sql'),
+var sys  = require('sys');
+    Step = require('../../lib/step'),
+    sql  = require('../minimal/sql'),
     util = require('./util');
-
-var env = {
-  rc: require('../../config/rc').rc
-};
 
 function insertRc(rcConn, rcId, ns, pageId, title, timestamp) {
   rcConn.query("select rc_id from recentchanges where rc_id = " + rcId,
@@ -67,16 +64,40 @@ function fetchRc(host, rcConn) {
     });
 };
 
-exports.start = function(settings, lang) {
-  _.extend(env, settings);
-  if(_.indexOf(env.rc.supported, lang) == -1) throw 'unsuported lang: ' + lang;
+exports.start = function(lang, path) {
+    var env  = { path: path };
 
-  util.log("setup rcdb connections for " + lang);
-  var rcConn = sql.connect(env['db-host'], env['db-user'], env['db-pwd'], env.rc[lang].db.rc);
+    Step(
+      function() {
+          require('../minimal/config').load(this, env);
+      },
+      function(err) {
+          if(err) logger.error('error when loading config:' + err);
 
-  var host = lang + '.wikipedia.org';
-  var fetch = function() {
-    fetchRc(host, rcConn);
-  };
-  setInterval(fetch, env.rc[lang].intervals.fetch);
+          lang = env.services.variants[lang] || lang;
+          if(_.indexOf(env.services.langs, lang) === -1 &&
+             _.indexOf(_.values(env.services.variants), lang) === -1
+          ) throw 'unsuported lang: ' + lang;
+
+          var host = lang + '.wikipedia.org';
+          _.extend(env, { lang: lang, host: host });
+
+          require('../minimal/db').init(this, env,
+              function(key) { key.substring(0, lang.length) === lang }
+          );
+      },
+      function(err) {
+          if(err) logger.error('error when init db:' + err);
+
+          var fetch = function() {
+              try {
+                  fetchRc(env);
+              } catch(e) {
+                  logger.error('error when fetching rc:' + e);
+              }
+          };
+          setInterval(fetch, env.batches[env.lang].fetch);
+      }
+    );
+
 }

@@ -3,31 +3,19 @@ require('../lib/underscore');
 var sys = require('sys');
 
 var utf8  = require('../lib/utf8');
-var sql   = require("../vendors/ultrafilter/sql"),
+var sql   = require("../vendors/minimal/sql"),
     util  = require('../vendors/ultrafilter/util'),
     html = require('../vendors/minimal/html');
-
-var wikiConns = {};
-var rcConns = {};
-
-function setupConns(env, lang) {
-  util.log("setup wikidb connections for " + lang);
-  wikiConns[lang] = sql.connect(env['db-host'], env['db-user'], env['db-pwd'], env.rc[lang].db.wiki);
-  util.log("setup rcdb connections for " + lang);
-  rcConns[lang] = sql.connect(env['db-host'], env['db-user'], env['db-pwd'], env.rc[lang].db.rc);
-}
 
 exports.app = function(env) {
 
   var services = env.services,
       langs = services.langs,
-      baseUrl = env.baseUrl(),
+      baseUrl = env.server.baseUrl(),
       msg = env.i18n.msg,
       unknown = env.templates['unknown'],
       cc = env.templates['categorychanges'],
       unsupported = env.templates['unsupported'];
-
-  _.each(env.supported, function(lang) { setupConns(env, lang); } );
 
   var perpage = 100;
   return function(req, res, variant, name) {
@@ -37,7 +25,7 @@ exports.app = function(env) {
         supcat = msg[variant].supcategory;
     var lang = env.services.variants[variant] || variant,
         cache = env.cache,
-        wikiConn = wikiConns[lang];
+        wikiConn = env.conns[lang + '-wiki'];
 
     if(_.indexOf(langs, variant) === -1) {
       html = unsupported({lang: lang, variant: variant, msg: msg});
@@ -51,7 +39,7 @@ exports.app = function(env) {
           res.simpleHtml(200, html);
         } else {
           var catId = rows[0].cat_id;
-          var rcConn = rcConns[lang];
+          var rcConn = env.conns[lang + '-rc'];
           rcConn.queryFetch(
             "select rc.rc_title, rc.rc_page_id, rc.rc_timestamp from filteredchanges as fc, recentchanges as rc where fc.fc_rc_id = rc.rc_id and rc.rc_ns = 0 and fc.fc_cat_id = " + catId + " order by rc.rc_timestamp desc limit " + perpage,
             function(changes) {

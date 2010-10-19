@@ -1,6 +1,6 @@
 var sqlclient = require("../libmysqlclient/mysql-libmysqlclient");
 
-var util = require('./util');
+var util = require('../../lib/log');
 
 function PseudoConn(host, user, pwd, db, port) {
   this.config = {
@@ -14,24 +14,29 @@ function PseudoConn(host, user, pwd, db, port) {
 }
 
 PseudoConn.prototype.connect = function() {
-  var conf = this.config;
+  var conf = this.config,
+  url  = 'mysql://' + conf.host + ':' + conf.port + '/' + conf.db;
+  logger.info('connecting to ' + url);
+  //logger.debug('user: ' + conf.user);
+  //logger.debug('pwd: ' + conf.pwd);
   this.conn = sqlclient.createConnectionSync(conf.host, conf.user, conf.pwd, conf.db, conf.port);
   this.conn.querySync("SET character_set_client = utf8");
   this.conn.querySync("SET character_set_results = utf8");
   this.conn.querySync("SET character_set_connection = utf8");
+  logger.info('connected to ' + url);
 };
 
 PseudoConn.prototype.query = function(sql, callback) {
   var pconn = this;
   var callbackWithErr = function(err, results) {
     if(err) {
-      util.log("err at query: " + err);
+      logger.error("err at query: " + err);
       pconn.check();
     } else {
       try {
         if(callback) callback(new PseudoResult(this, results));
       } catch(e) {
-        util.log("err in query callback: " + e);
+        logger.error("err in query callback: " + e);
       }
     }
   };
@@ -44,14 +49,14 @@ PseudoConn.prototype.querySync = function(sql, callback) {
   try {
     results = this.conn.querySync(sql);
   } catch(e) {
-    util.log("err at query: " + e);
+    logger.error("err at query: " + e);
     pconn.check();
   }
   if(results !== undefined) try {
     if(callback) callback(new PseudoResult(this, results));
     if(results && results !== true) results.freeSync();
   } catch(e) {
-    util.log("err in query callback: " + e);
+    logger.error("err in query callback: " + e);
   }
 }
 
@@ -75,10 +80,10 @@ PseudoConn.prototype.queryFetchSync = function(sql, callback) {
 
 PseudoConn.prototype.check = function() {
   this.conn.query("select 1", function(err, results) {
-    util.log("check connection and keep alive.");
+    logger.error("check connection and keep alive.");
     if(err) {
       this.connect();
-      util.log("reconnect to db.");
+      logger.error("reconnect to db.");
     }
   });
 }
@@ -92,13 +97,13 @@ PseudoResult.prototype.fetchAll = function(callback) {
   var pr = this;
   var callbackWithErr = function(err, rows) {
     if(err) {
-      util.log("err at fetching: " + err);
+      logger.error("err at fetching: " + err);
       pr.conn.check();
     } else {
       try {
         if(callback) callback(rows);
       } catch(e) {
-        util.log("err in fetch callback: " + e);
+        logger.error("err in fetch callback: " + e);
       }
     }
   };
@@ -111,30 +116,40 @@ PseudoResult.prototype.fetchAllSync = function(callback) {
   try {
     rows = this.results.fetchAllSync();
   } catch(e) {
-    util.log("err at fetching: " + e);
+    logger.error("err at fetching: " + e);
     pr.conn.check();
   }
   if(rows !== undefined) try {
     if(callback) callback(rows);
   } catch(e) {
-    util.log("err in fetch callback: " + e);
+    logger.error("err in fetch callback: " + e);
   }
 }
 
-exports.connect = function(host, user, pwd, db, port) {
+function connect (host, user, pwd, db, port) {
   var pconn =  new PseudoConn(host, user, pwd, db, port);
 
   var check = function() {
     pconn.conn.query("select 1", function(err, results) {
-      util.log("check connection and keep alive.");
+      logger.info("check connection and keep alive.");
       if(err) {
         pconn.connect();
-        util.log("reconnect to db.");
+        logger.info("reconnect to db.");
       }
     });
   };
   setInterval(check, 60*1000);
 
   return pconn;
-};
+}
 
+function connectByUrl (url) {
+    var parsed = require('url').parse(url), auth = parsed.auth.split(':');
+    if(parsed.protocol !== 'mysql:') throw 'wrong protocol for mysql!'
+
+    return connect(parsed.hostname, auth[0], auth[1],
+        parsed.pathname.substring(1), parsed.port);
+}
+
+exports.connect = connect;
+exports.connectByUrl = connectByUrl;

@@ -1,36 +1,17 @@
 #!/usr/bin/env node
 
-var fs = require('fs'),
-populate = require('../vendors/ultrafilter/populate-cat'),
-sys = require('sys');
+require('../lib/log');
 
-var arg = process.argv[1],
-    len = arg.length,
-    path = arg.substring(0, len - 'scripts/populate.js'.length);
+var fs       = require('fs'),
+    sys      = require('sys'),
+    populate = require('../vendors/ultrafilter/populate-cat');
 
-sys.puts("start populate at " + path)
+var arg  = process.argv[1],
+    len  = arg.length,
+    path = arg.substring(0, len - 'scripts/populate.js'.length),
+    lang = process.argv[2] || 'zh';
 
-fs.readFile(process.argv[2] || path + 'settings.json', function(err, data) {
-    var settings = {};
+logger.info("start populate at " + path);
 
-    if (err) {
-      sys.puts('No settings.json found ('+err+'). Using default settings');
-    } else {
-      try {
-        settings = JSON.parse(data.toString('utf8',0,data.length));
-        settings.path = path;
-      } catch (e) {
-        sys.puts('Error parsing settings.json: '+e);
-        process.exit(1);
-      }
-    }
-
-    if(!settings.admin) {
-      sys.puts('email address of administrator was not setted!');
-      process.exit(1);
-    }
-
-    var lang = process.argv[3] || 'zh';
-    populate.start(settings, lang);
-});
+populate.start(lang);
 

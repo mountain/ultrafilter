@@ -3,17 +3,9 @@ require('../lib/underscore');
 var sys = require('sys');
 
 var utf8 = require('../lib/utf8');
-var sql  = require("../vendors/ultrafilter/sql"),
+var sql  = require("../vendors/minimal/sql"),
     util = require('../vendors/ultrafilter/util'),
     html = require('../vendors/minimal/html');
-
-var wikiConns = {};
-var rcConns = {};
-
-function setupConns(env, lang) {
-  util.log("setup rcdb connections for " + lang);
-  rcConns[lang] = sql.connect(env['db-host'], env['db-user'], env['db-pwd'], env.rc[lang].db.rc);
-}
 
 exports.app = function(env) {
 
@@ -23,8 +15,6 @@ exports.app = function(env) {
       unknown = env.templates['unknown'],
       ud = env.templates['userdiscussions'],
       unsupported = env.templates['unsupported'];
-
-  _.each(env.supported, function(lang) { setupConns(env, lang); } );
 
   var perpage = 100;
   return function(req, res, variant, user) {
@@ -38,7 +28,7 @@ exports.app = function(env) {
       res.simpleHtml(200, html);
     } else {
       util.log("handle request for " + variant + ":" + user);
-      rcConn = rcConns[lang];
+      rcConn = env.conns[lang + '-rc'][lang];
       rcConn.queryFetch("select ntf.ntf_talk_title, rc.rc_page_id, rc.rc_timestamp from notifications as ntf, recentchanges as rc where ntf.ntf_rc_id = rc.rc_id and ntf.ntf_user = '" + user + "' order by rc.rc_timestamp desc limit 100", function(rows) {
           var html = ud({lang: lang, variant: variant, langs: langs, dir: dir, services: services, msg: msg, user: user, discussions: rows});
         res.simpleHtml(200, html);

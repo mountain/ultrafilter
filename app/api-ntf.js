@@ -3,19 +3,9 @@ require('../lib/underscore');
 var sys = require('sys');
 
 var utf8  = require('../lib/utf8');
-var sql   = require("../vendors/ultrafilter/sql"),
+var sql   = require("../vendors/minimal/sql"),
     util  = require('../vendors/ultrafilter/util'),
     html = require('../vendors/minimal/html');
-
-var wikiConns = {};
-var rcConns = {};
-
-function setupConns(env, lang) {
-  util.log("setup wikidb connections for " + lang);
-  wikiConns[lang] = sql.connect(env['db-host'], env['db-user'], env['db-pwd'], env.rc[lang].db.wiki);
-  util.log("setup rcdb connections for " + lang);
-  rcConns[lang] = sql.connect(env['db-host'], env['db-user'], env['db-pwd'], env.rc[lang].db.rc);
-}
 
 function sqlTime(time) {
   return "'" + time.getUTCFullYear() + "-" + (time.getUTCMonth() + 1) + "-" + time.getUTCDate() +
@@ -24,13 +14,11 @@ function sqlTime(time) {
 
 exports.app = function(env) {
 
-  _.each(env.supported, function(lang) { setupConns(env, lang); } );
-
   return function(req, res, variant, user, noop, time) {
     user = utf8.decode(unescape(user));
     var lang = env.services.variants[variant] || variant,
         cache = env.cache,
-        wikiConn = wikiConns[lang];
+        wikiConn = env.conns[lang + '-wiki'];
 
     if(time) {
       time = new Date(parseInt(time));
@@ -41,7 +29,7 @@ exports.app = function(env) {
     var query = require('url').parse(req.url, true).query,
     jsonp = query?(query.callback || query.jsonp):undefined;
 
-    var rcConn = rcConns[lang];
+    var rcConn = env.conns[lang + '-rc'];
     rcConn.queryFetch("select ntf.ntf_talk_title, rc.rc_page_id, rc.rc_timestamp from notifications as ntf, recentchanges as rc where ntf.ntf_rc_id = rc.rc_id and rc.rc_timestamp > " + sqlTime(time) + " and ntf.ntf_user = '" + user + "' order by rc.rc_timestamp desc limit 100",
       function(notifications) {
         var ntf = [], ntfKeys = [];

@@ -7,24 +7,42 @@ var sys  = require('sys');
     util = require('./util');
 
 function insertRc(rcConn, rcId, ns, pageId, title, timestamp) {
-  rcConn.query("select rc_id from recentchanges where rc_id = " + rcId,
-    function(result) {
-      result.fetchAll(function(rows) {
-        if(rows.length === 0) {
-          rcConn.query("insert into recentchanges(rc_id, rc_ns, rc_page_id, rc_title, rc_timestamp)" +
-               " values(" + rcId + "," + ns + "," + pageId + ",'" +  title + "','" + timestamp +"')",
-               function(result) {
-                 util.log(rcId, ns, pageId, title, timestamp);
-               }
-          );
-        }
-      });
-    }
+
+  Step(
+      function() {
+          rcConn.query("select rc_id from recentchanges where rc_id = " + rcId, this);
+      },
+      function(err, result) {
+          if(err) {
+              logger.error('error when check duplicate:' + err);
+          } else {
+              result.fetchAll(this);
+          }
+      },
+      function(err, rows) {
+          if(err) {
+              logger.error('error when check duplicate:' + err);
+          } else {
+              if(rows.length > 0) return;
+              rcConn.query("insert into recentchanges(rc_id, rc_ns, rc_page_id, rc_title, rc_timestamp)" +
+                 " values(" + rcId + "," + ns + "," + pageId + ",'" +  title + "','" + timestamp +"')",
+                 this
+              );
+          }
+      },
+      function(err, result) {
+          if(err) {
+              logger.error('error when inserting rc:' + err);
+          } else {
+              logger.info(rcId, ns, pageId, title, timestamp);
+          }
+      }
   );
 }
 
-function fetchRc(host, rcConn) {
+function fetchRc(env) {
     var http = require('http'),
+        host = env.host,
         wp = http.createClient(80, host),
         request = wp.request('GET',
           '/w/api.php?action=query&list=recentchanges&rcnamespace=0|1&rcprop=title|ids|timestamp|user&rcshow=!minor|!bot&rctype=edit&rclimit=5&format=json&callback=?',
@@ -53,11 +71,11 @@ function fetchRc(host, rcConn) {
               ns = rc.ns,
               title = rc.title,
               timestamp = rc.timestamp;
-              insertRc(rcConn, rcId, ns, pageId, title, timestamp);
+              insertRc(env.conns[env.lang + '-rc'], rcId, ns, pageId, title, timestamp);
           }
           body = '';
         } catch (e) {
-          sys.puts('error when fetching rc: ' + e);
+          logger.error('error when fetching rc: ' + e);
           body = '';
        }
       });

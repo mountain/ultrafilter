@@ -9,8 +9,6 @@ var sql   = require("../vendors/minimal/sql"),
 
 exports.app = function(env) {
 
-  _.each(env.supported, function(lang) { setupConns(env, lang); } );
-
   return function(req, res, variant, name) {
     name = utf8.decode(unescape(name));
     var lang= env.services.variants[variant] || variant,

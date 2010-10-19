@@ -1,51 +1,28 @@
-var _ = require('../../lib/underscore')._,
-    sys = require('sys'),
-    router = require('./node-router'),
-    services = require('../../config/services').services,
-    i18n = require('../../config/i18n').i18n,
-    rc = require('../../config/rc').rc,
-    routers = require('../../config/routers').routers;
+require('../../lib/underscore');
 
-var env = {
-  host: 'localhost',
-  port: 8080,
-  baseUrl: function() {
-    if(this.port===80)
-      return 'http://' + this.host;
-    else
-      return 'http://' + this.host + ':' + this.port;
-  },
-  services: services,
-  i18n: i18n,
-  rc: rc,
-  routers: routers
-};
+var sys    = require('sys'),
+    Step   = require('../../lib/step'),
+    router = require('./node-router');
 
-exports.start = function(settings) {
+var env = {};
 
-  _.extend(env, settings);
+exports.start = function() {
 
-  var cacheSize = env.cacheSize || 10000;
-  env.cache = new (require('../../lib/cache').Cache)(cacheSize);
+  Step(
+      function() { require('./config').load(env); },
+      function() { require('./template').load(env); },
+      function() {
+          var server = router.getServer(env.logger);
 
-  env.logger = (function() {
-    sys.print((new Date()).toUTCString() + " - ");
-    sys.puts(_.toArray(arguments).join(" "));
-  });
+          _(routers).chain().keys().each(function(key) {
+              server.get(routers[key], require('../../app/' + key).app(env));
+          });
 
-  require('./template').load(env);
+          server.get(new RegExp("^/(.+)$"), router.staticDirHandler(env.cache, env.path + 'public'));
 
-  setTimeout(function() {
-    var server = router.getServer(env.logger);
-
-    _(routers).chain().keys().each(function(key) {
-        server.get(routers[key], require('../../app/' + key).app(env));
-    });
-
-    server.get(new RegExp("^/(.+)$"), router.staticDirHandler(env.cache, env.path + 'public'));
-
-    server.listen(env.port, env.host);
-  }, 1000);
+          server.listen(env.port, env.host);
+      }
+  );
 
 }
 

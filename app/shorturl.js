@@ -1,5 +1,5 @@
 var _    = require('../lib/underscore')._,
-    util = require('../vendors/minimal/util');
+    util = require('../vendors/minimal/html');
 
 exports.app = function(env) {
   var services = env.services,

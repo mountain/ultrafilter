@@ -1,4 +1,4 @@
-var util = require('../vendors/minimal/util'),
+var util = require('../vendors/minimal/html'),
     sys  = require('sys');
 
 exports.app = function(env) {

@@ -5,7 +5,7 @@ var sys = require('sys');
 var utf8 = require('../lib/utf8');
 var sql  = require("../vendors/ultrafilter/sql"),
     util = require('../vendors/ultrafilter/util'),
-    util2 = require('../vendors/minimal/util');
+    html = require('../vendors/minimal/html');
 
 var wikiConns = {};
 var rcConns = {};
@@ -31,7 +31,7 @@ exports.app = function(env) {
     user = utf8.decode(unescape(user));
     var lang = env.services.variants[variant] || variant;
     lang = lang || 'en';
-    var dir = util2.htmlDir(env, variant);
+    var dir = html.htmlDir(env, variant);
 
     if(_.indexOf(langs, variant) === -1) {
       html = unsupported({lang: lang, variant: variant, msg: msg});

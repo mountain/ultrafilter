@@ -5,7 +5,7 @@ var sys = require('sys');
 var utf8  = require('../lib/utf8');
 var sql   = require("../vendors/ultrafilter/sql"),
     util  = require('../vendors/ultrafilter/util'),
-    util2 = require('../vendors/minimal/util');
+    html = require('../vendors/minimal/html');
 
 var wikiConns = {};
 

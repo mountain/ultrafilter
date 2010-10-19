@@ -1,14 +1,15 @@
-var sys = require('sys'),
-    _   = require('../../lib/underscore')._;
+require('../../lib/underscore');
+
+var sys = require('sys');
 
 exports.load = function(env) {
   env.templates = {};
 
   var fs = require('fs')
-      tmpl_path = env.path + 'app/templates';
-  fs.readdir(tmpl_path, function(err, files) {
+      tmplPath = env.path + 'app/templates';
+  fs.readdir(tmplPath, function(err, files) {
     if (err) {
-      sys.puts('No template found (' + err + ') at ' + tmpl_path);
+      sys.puts('No template found (' + err + ') at ' + tmplPath);
     } else {
       _(files).chain().select(function(file) { return file.match(/.+\.erb$/); } ).each(
         function(file) {

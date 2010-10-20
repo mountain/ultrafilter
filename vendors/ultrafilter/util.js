@@ -4,15 +4,6 @@ var sys = require('sys');
 
 var cc = require('../../lib/cache');
 
-exports.log = function() {
-    sys.print((new Date()).toUTCString() + ' - ');
-    sys.puts(_.toArray(arguments).join('\t'));
-};
-
-exports.throwerr = function(err) {
-  if(err) throw err;
-}
-
 exports.cachedDbEntry = function(cache, prefix, key, conn, sql, callback) {
   var id = prefix + ":" + key;
   var entry = cache.getItem(id);

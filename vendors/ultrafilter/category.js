@@ -2,7 +2,7 @@ function get(env, catId) {
   var cats = env.cache.getItem('c' + catId);
   if(!cats) {
     cats = [];
-    env.wikiConn.querySync("select distinct(cat_to) from catgraph where cat_from = " + catId,
+    env.conns[env.lang + '-wiki'].querySync("select distinct(cat_to) from catgraph where cat_from = " + catId,
     function(result) {
       result.fetchAllSync(function(rows) {
         _.each(rows, function(row) {
@@ -21,7 +21,7 @@ function get(env, catId) {
 exports.categories = function(env, pageId) {
   var cats = [], mark = 0;
 
-  env.wikiConn.querySync("select distinct(cat_to) from catgraph where page_from = " + pageId,
+  env.conns[env.lang + '-wiki'].querySync("select distinct(cat_to) from catgraph where page_from = " + pageId,
   function(result) {
     result.fetchAllSync(function(rows) {
       _.each(rows, function(row) {

@@ -13,5 +13,5 @@ var arg = process.argv[1],
 
 logger.info("start dispatch at " + path)
 
-dispatch.start(lang);
+dispatch.start(lang, path);
 

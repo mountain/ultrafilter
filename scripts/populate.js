@@ -13,5 +13,5 @@ var arg  = process.argv[1],
 
 logger.info("start populate at " + path);
 
-populate.start(lang);
+populate.start(lang, path);
 

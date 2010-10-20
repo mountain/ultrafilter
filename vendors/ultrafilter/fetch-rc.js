@@ -1,23 +1,13 @@
 require('../../lib/underscore');
 require('../../lib/log');
 
-var sys  = require('sys');
-    Step = require('../../lib/step'),
-    sql  = require('../minimal/sql'),
-    util = require('./util');
+var Step = require('../../lib/step');
 
-function insertRc(rcConn, rcId, ns, pageId, title, timestamp) {
-
+function insertRc(env, rc) {
+  var reConn = env.conns[env.lang + '-rc'];
   Step(
       function() {
-          rcConn.query("select rc_id from recentchanges where rc_id = " + rcId, this);
-      },
-      function(err, result) {
-          if(err) {
-              logger.error('error when check duplicate:' + err);
-          } else {
-              result.fetchAll(this);
-          }
+          rcConn.queryFetch("select rc_id from recentchanges where rc_id = " + rcId, this);
       },
       function(err, rows) {
           if(err) {
@@ -25,7 +15,7 @@ function insertRc(rcConn, rcId, ns, pageId, title, timestamp) {
           } else {
               if(rows.length > 0) return;
               rcConn.query("insert into recentchanges(rc_id, rc_ns, rc_page_id, rc_title, rc_timestamp)" +
-                 " values(" + rcId + "," + ns + "," + pageId + ",'" +  title + "','" + timestamp +"')",
+                 " values(" + rc.rcid + "," + rc.ns + "," + rc.pageid + ",'" + rc.title + "','" + rc.timestamp +"')",
                  this
               );
           }
@@ -34,13 +24,13 @@ function insertRc(rcConn, rcId, ns, pageId, title, timestamp) {
           if(err) {
               logger.error('error when inserting rc:' + err);
           } else {
-              logger.info(rcId, ns, pageId, title, timestamp);
+              logger.info(rc.rcid, rc.ns, rc.pageid, rc.title, rc.timestamp);
           }
       }
   );
 }
 
-function fetchRc(env) {
+function fetchRc(callback, env) {
     var http = require('http'),
         host = env.host,
         wp = http.createClient(80, host),
@@ -66,12 +56,7 @@ function fetchRc(env) {
           var data = JSON.parse(body);
           for(var ind in data.query.recentchanges) {
               var rc = data.query.recentchanges[ind],
-              rcId = rc.rcid,
-              pageId = rc.pageid,
-              ns = rc.ns,
-              title = rc.title,
-              timestamp = rc.timestamp;
-              insertRc(env.conns[env.lang + '-rc'], rcId, ns, pageId, title, timestamp);
+              callback(env, rc);
           }
           body = '';
         } catch (e) {
@@ -83,39 +68,24 @@ function fetchRc(env) {
 };
 
 exports.start = function(lang, path) {
-    var env  = { path: path };
-
     Step(
       function() {
-          require('../minimal/config').load(this, env);
+          require('./env').init(this, lang, path);
       },
-      function(err) {
-          if(err) logger.error('error when loading config:' + err);
-
-          lang = env.services.variants[lang] || lang;
-          if(_.indexOf(env.services.langs, lang) === -1 &&
-             _.indexOf(_.values(env.services.variants), lang) === -1
-          ) throw 'unsuported lang: ' + lang;
-
-          var host = lang + '.wikipedia.org';
-          _.extend(env, { lang: lang, host: host });
-
-          require('../minimal/db').init(this, env,
-              function(key) { key.substring(0, lang.length) === lang }
-          );
-      },
-      function(err) {
-          if(err) logger.error('error when init db:' + err);
+      function(err, env) {
+          if(err) logger.error('error when init env:' + err);
 
           var fetch = function() {
-              try {
-                  fetchRc(env);
-              } catch(e) {
-                  logger.error('error when fetching rc:' + e);
-              }
+              Setp(
+                  function() {
+                    fetchRc(this, env);
+                  },
+                  function(err, env, rc) {
+                    insertRc(env, rc);
+                  }
+              );
           };
           setInterval(fetch, env.batches[env.lang].fetch);
       }
     );
-
 }

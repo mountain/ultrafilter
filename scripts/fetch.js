@@ -3,7 +3,6 @@
 require('../lib/log');
 
 var fs    = require('fs'),
-    sys   = require('sys'),
     fetch = require('../vendors/ultrafilter/fetch-rc');
 
 var arg  = process.argv[1],

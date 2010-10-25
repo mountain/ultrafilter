@@ -4,7 +4,8 @@ require('../../lib/log');
 var Step = require('../../lib/step');
 
 exports.init = function(callback, lang, path) {
-    var env  = { path: path };
+    var host = lang + '.wikipedia.org',
+        env  = { path: path, lang: lang, host: host };
 
     Step(
       function() {
@@ -17,12 +18,12 @@ exports.init = function(callback, lang, path) {
           if(_.indexOf(env.services.langs, lang) === -1 &&
              _(env.services.variants).chain().values().indexOf(lang) === -1
           ) throw 'unsuported lang: ' + lang;
-
-          var host = lang + '.wikipedia.org';
-          _.extend(env, { lang: lang, host: host });
+          env.lang = lang;
 
           require('../minimal/db').init(this, env,
-              function(key) { key.substring(0, lang.length) === lang }
+              function(key) {
+                return key.substring(0, lang.length) === lang
+              }
           );
       },
       function(err) {

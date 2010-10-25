@@ -1,4 +1,11 @@
 
 [submodule "vendors/libmysqlclient"]
-	path = vendors/libmysqlclient
-	url = http://github.com/Sannis/node-mysql-libmysqlclient.git
+    path = vendors/libmysqlclient
+    url = http://github.com/Sannis/node-mysql-libmysqlclient.git
+
+[submodule "vendors/connect"]
+	path = vendors/connect
+	url = http://github.com/senchalabs/connect.git
+[submodule "vendors/Mu"]
+	path = vendors/Mu
+	url = http://github.com/raycmorgan/Mu.git

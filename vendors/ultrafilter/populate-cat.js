@@ -5,16 +5,17 @@ var cat  = require("./category"),
     Step = require('../../lib/step');
 
 function insertFc(env, rcId, pageId) {
+    var rcConn = env.conns[env.lang + '-rc'];
     Step(
         function() {
-            env.conns[env.lang + '-rc'].
+            rcConn.
               queryFetchSync("select fc_rc_id from filteredchanges where fc_rc_id = " + rcId, this);
         },
         function(err, rows) {
             if(rows.length === 0) {
                 categories = cat.categories(env, pageId);
                 _.each(categories, function(cat_id) {
-                    env.rcConn.
+                    rcConn.
                       querySync("insert into filteredchanges(fc_rc_id, fc_cat_id)" +
                          " values(" + rcId + "," + cat_id + ")");
                 });
@@ -49,13 +50,11 @@ function populateCat(env) {
                   );
                 }
             }
-        },
+        }
     );
 }
 
 exports.start = function(lang, path) {
-    var env  = { path: path };
-
     Step(
       function() {
           require('./env').init(this, lang, path);
@@ -73,6 +72,5 @@ exports.start = function(lang, path) {
           setInterval(populate, env.batches[env.lang].populate);
       }
     );
-
 }
 

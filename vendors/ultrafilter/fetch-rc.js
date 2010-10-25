@@ -55,8 +55,7 @@ function fetchRc(callback, env) {
           body = body.substring(1, body.length - 1);
           var data = JSON.parse(body);
           for(var ind in data.query.recentchanges) {
-              var rc = data.query.recentchanges[ind],
-              callback(env, rc);
+              callback(env, data.query.recentchanges[ind]);
           }
           body = '';
         } catch (e) {
@@ -76,13 +75,11 @@ exports.start = function(lang, path) {
           if(err) logger.error('error when init env:' + err);
 
           var fetch = function() {
-              Setp(
+              Step(
                   function() {
                     fetchRc(this, env);
                   },
-                  function(err, env, rc) {
-                    insertRc(env, rc);
-                  }
+                  insertRc
               );
           };
           setInterval(fetch, env.batches[env.lang].fetch);
